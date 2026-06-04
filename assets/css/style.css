@@ -902,7 +902,7 @@ a {
     }
 
     .services-grid {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
 
     .service-card {
@@ -910,13 +910,52 @@ a {
         border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
     }
 
-    .service-card:nth-child(4n) {
+    .service-card:nth-child(3n) {
         border-right: none;
     }
 
-    .service-card:nth-last-child(-n+4) {
+    .service-card:nth-last-child(-n+3) {
         border-bottom: none;
     }
+}
+
+/* =============================================
+     SERVIÇOS — "Ver todos" CTA
+   ============================================= */
+.services-ver-todos {
+    margin-top: var(--espaco-10);
+    text-align: center;
+}
+
+.services-ver-todos__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--espaco-2);
+    font-family: var(--fonte-corpo);
+    font-weight: var(--peso-semibold);
+    font-size: var(--texto-base);
+    color: var(--cor-destaque);
+    text-decoration: none;
+    padding: var(--espaco-3) var(--espaco-6);
+    border: 1px solid var(--cor-destaque);
+    border-radius: var(--raio-full);
+    transition: background-color var(--transicao-rapida),
+                color var(--transicao-rapida),
+                transform var(--transicao-rapida);
+}
+
+.services-ver-todos__link:hover {
+    background-color: var(--cor-destaque);
+    color: var(--cor-primaria);
+    transform: translateY(-1px);
+}
+
+.services-ver-todos__link svg {
+    transition: transform var(--transicao-rapida);
+}
+
+.services-ver-todos__link:hover svg {
+    transform: translateX(2px);
 }
 
 /* =============================================
