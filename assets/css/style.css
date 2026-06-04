@@ -21,7 +21,26 @@
     --cor-borda: #E5E7EB;
     /* linhas divisórias */
     --cor-sucesso: #16A34A;
+    --sucesso-hover: #15803D;
     --cor-erro: #DC2626;
+    --destaque-hover: #D97706;
+    --destaque-soft: #FDE68A;
+
+    /* Texto em superfícies escuras */
+    --texto-em-dark: #F8F9FC;
+    --texto-em-dark-suave: rgba(248, 249, 252, 0.72);
+    --texto-em-dark-meta: rgba(248, 249, 252, 0.55);
+
+    /* Tonalidades sobre fundo escuro */
+    --superficie-claro-em-dark: rgba(255, 255, 255, 0.08);
+    --superficie-claro-em-dark-hover: rgba(255, 255, 255, 0.14);
+    --borda-claro-em-dark: rgba(255, 255, 255, 0.15);
+    --borda-em-dark: rgba(255, 255, 255, 0.12);
+    --destaque-tint: rgba(245, 158, 11, 0.12);
+
+    /* Hero — gradiente sutil de profundidade */
+    --hero-bg-primario: #1B3A6B;
+    --hero-bg-secundario: #142A4F;
 
     /* =============================================
        TIPOGRAFIA
@@ -362,12 +381,13 @@ a {
     min-height: 100vh;
     padding-top: 72px;
     overflow: hidden;
-    /* Azul escuro solido — sem gradiente colorido */
-    background-color: var(--cor-primaria);
-    /* Textura SVG de grade fina */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M 40 0 L 0 0 0 40' fill='none' stroke='rgba(255,255,255,0.04)' stroke-width='1'/%3E%3C/svg%3E");
-    background-size: 40px 40px;
-    /* Linha ambar na borda superior do hero */
+    background-color: var(--hero-bg-primario);
+    /* Gradiente radial sutil — mais escuro no canto superior direito */
+    background-image:
+        radial-gradient(ellipse 70% 80% at top right, var(--hero-bg-secundario) 0%, transparent 60%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M 40 0 L 0 0 0 40' fill='none' stroke='rgba(255,255,255,0.04)' stroke-width='1'/%3E%3C/svg%3E");
+    background-size: 100% 100%, 40px 40px;
+    background-repeat: no-repeat, repeat;
     border-top: 3px solid var(--cor-destaque);
 }
 
@@ -400,13 +420,13 @@ a {
     gap: var(--espaco-2);
     align-self: flex-start;
     padding: var(--espaco-2) var(--espaco-4);
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: var(--superficie-claro-em-dark);
+    border: 1px solid var(--borda-claro-em-dark);
     border-radius: var(--raio-full);
     font-family: var(--fonte-corpo);
     font-weight: var(--peso-medio);
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.7);
+    font-size: var(--texto-sm);
+    color: var(--texto-em-dark-suave);
 }
 
 /* H1 dominante */
@@ -416,12 +436,13 @@ a {
     font-size: clamp(2.2rem, 8vw, 3rem);
     line-height: 1.1;
     letter-spacing: -0.03em;
-    color: #FFFFFF;
+    color: var(--texto-em-dark);
     margin: 0;
 }
 
 .hero__titulo-destaque {
     color: var(--cor-destaque);
+    font-style: italic;
 }
 
 /* Subtitulo */
@@ -430,7 +451,7 @@ a {
     font-weight: var(--peso-normal);
     font-size: clamp(1rem, 2vw, 1.2rem);
     line-height: 1.7;
-    color: rgba(255, 255, 255, 0.60);
+    color: var(--texto-em-dark-suave);
     max-width: 46ch;
     margin: 0;
 }
@@ -462,8 +483,8 @@ a {
     font-family: var(--fonte-corpo);
     font-weight: var(--peso-medio);
     font-size: var(--texto-base);
-    color: #FFFFFF;
-    opacity: 0.7;
+    color: var(--texto-em-dark);
+    opacity: 0.72;
     text-decoration: none;
     transition: opacity var(--transicao-rapida);
     padding: var(--espaco-2) 0;
@@ -485,13 +506,13 @@ a {
 .hero__metrica-item {
     font-family: var(--fonte-corpo);
     font-weight: var(--peso-medio);
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.55);
+    font-size: var(--texto-sm);
+    color: var(--texto-em-dark-meta);
 }
 
 .hero__metrica-sep {
-    color: rgba(255, 255, 255, 0.2);
-    font-size: 13px;
+    color: var(--borda-em-dark);
+    font-size: var(--texto-sm);
     user-select: none;
 }
 
@@ -508,7 +529,7 @@ a {
     max-height: 700px;
     overflow: hidden;
     /* Placeholder enquanto nao tem foto real */
-    background: linear-gradient(160deg, #2a4a7f 0%, var(--cor-primaria) 100%);
+    background: linear-gradient(160deg, var(--hero-bg-primario) 0%, var(--hero-bg-secundario) 100%);
 }
 
 /* Silhueta placeholder */
@@ -526,7 +547,7 @@ a {
     position: absolute;
     inset: 0;
     z-index: 1;
-    background: linear-gradient(to right, var(--cor-primaria) 0%, transparent 30%);
+    background: linear-gradient(to right, var(--hero-bg-primario) 0%, transparent 30%);
     pointer-events: none;
 }
 
@@ -536,7 +557,7 @@ a {
     position: absolute;
     inset: 0;
     z-index: 1;
-    background: linear-gradient(to top, var(--cor-primaria) 0%, transparent 25%);
+    background: linear-gradient(to top, var(--hero-bg-primario) 0%, transparent 25%);
     pointer-events: none;
 }
 
@@ -562,7 +583,7 @@ a {
     width: 36px;
     height: 36px;
     border-radius: var(--raio-full);
-    background-color: rgba(245, 158, 11, 0.12);
+    background-color: var(--destaque-tint);
     color: var(--cor-destaque);
     flex-shrink: 0;
 }
