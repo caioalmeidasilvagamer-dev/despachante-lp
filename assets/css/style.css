@@ -57,6 +57,10 @@
     --step-glow: 0 0 30px rgba(245, 158, 11, 0.25);
     --step-glow-hover: 0 0 36px rgba(245, 158, 11, 0.45);
 
+    /* Decoração (números grandes em seções claras) */
+    --decorativo-claro: rgba(27, 58, 107, 0.15);
+    --decorativo-claro-hover: rgba(245, 158, 11, 0.95);
+
     /* =============================================
        TIPOGRAFIA
     ============================================== */
@@ -1592,7 +1596,15 @@ a {
     gap: var(--espaco-6);
     align-items: flex-start;
     padding-block: var(--espaco-10);
+    padding-inline: var(--espaco-4);
+    margin-inline: calc(var(--espaco-4) * -1);
     border-top: 1px solid var(--cor-borda);
+    border-radius: var(--raio-md);
+    transition: background-color var(--transicao-normal);
+}
+
+.diferenciais-item:hover {
+    background-color: var(--cor-fundo-alt);
 }
 
 .diferenciais-item:last-child {
@@ -1604,10 +1616,14 @@ a {
     font-weight: var(--peso-extrabold);
     font-size: clamp(3.5rem, 7vw, 6rem);
     line-height: 1;
-    color: var(--cor-primaria);
-    opacity: 0.15;
+    color: var(--decorativo-claro);
     align-self: flex-start;
     user-select: none;
+    transition: color var(--transicao-normal);
+}
+
+.diferenciais-item:hover .diferenciais-item__num {
+    color: var(--decorativo-claro-hover);
 }
 
 .diferenciais-item__conteudo {
@@ -1620,10 +1636,15 @@ a {
 .diferenciais-item__titulo {
     font-family: var(--fonte-display);
     font-weight: var(--peso-semibold);
-    font-size: var(--texto-xl);
+    font-size: var(--texto-2xl);
     line-height: var(--linha-apertada);
     color: var(--cor-texto);
     margin: 0;
+    transition: color var(--transicao-normal);
+}
+
+.diferenciais-item:hover .diferenciais-item__titulo {
+    color: var(--cor-secundaria);
 }
 
 .diferenciais-item__desc {
