@@ -52,6 +52,11 @@
     --sombra-sucesso: 0 6px 18px rgba(22, 163, 74, 0.35);
     --sombra-sucesso-hover: 0 10px 24px rgba(22, 163, 74, 0.45);
 
+    /* Step do processo (timeline) */
+    --destaque-fade: rgba(245, 158, 11, 0.3);
+    --step-glow: 0 0 30px rgba(245, 158, 11, 0.25);
+    --step-glow-hover: 0 0 36px rgba(245, 158, 11, 0.45);
+
     /* =============================================
        TIPOGRAFIA
     ============================================== */
@@ -1302,7 +1307,7 @@ a {
 .processo-section {
     position: relative;
     background-color: var(--cor-primaria);
-    color: #FFFFFF;
+    color: var(--texto-em-dark);
     overflow: hidden;
 }
 
@@ -1310,7 +1315,7 @@ a {
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.08), transparent 55%);
+    background: radial-gradient(circle at 50% 0%, var(--destaque-tint), transparent 55%);
     pointer-events: none;
 }
 
@@ -1348,7 +1353,7 @@ a {
     font-family: var(--fonte-corpo);
     font-size: var(--texto-lg);
     line-height: var(--linha-normal);
-    color: rgba(255, 255, 255, 0.55);
+    color: var(--texto-em-dark-meta);
     max-width: 540px;
     margin: var(--espaco-4) auto 0 auto;
 }
@@ -1371,14 +1376,14 @@ a {
     top: 40px;
     bottom: 40px;
     width: 1px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--borda-em-dark);
     overflow: hidden;
 }
 
 .processo-linha-fill {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom, var(--cor-destaque), rgba(245, 158, 11, 0.3));
+    background: linear-gradient(to bottom, var(--cor-destaque), var(--destaque-fade));
     transform: scaleY(0);
     transform-origin: top;
     transition: transform 1.2s ease;
@@ -1409,11 +1414,17 @@ a {
     height: 80px;
     flex-shrink: 0;
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: var(--superficie-claro-em-dark);
     border: 1.5px solid var(--cor-destaque);
     color: var(--cor-destaque);
-    box-shadow: 0 0 30px rgba(245, 158, 11, 0.25);
+    box-shadow: var(--step-glow);
     backdrop-filter: blur(4px);
+    transition: box-shadow var(--transicao-normal), background-color var(--transicao-normal);
+}
+
+.step-circle:hover {
+    background-color: var(--superficie-claro-em-dark-hover);
+    box-shadow: var(--step-glow-hover);
 }
 
 .step-num {
@@ -1425,13 +1436,13 @@ a {
     display: grid;
     place-items: center;
     background-color: var(--cor-destaque);
-    color: #FFFFFF;
+    color: var(--texto-em-dark);
     border-radius: 50%;
     font-family: var(--fonte-display);
     font-weight: var(--peso-bold);
     font-size: var(--texto-xs);
     line-height: 1;
-    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.4);
+    box-shadow: 0 2px 6px var(--destaque-fade);
 }
 
 .step-icon {
@@ -1450,7 +1461,7 @@ a {
     font-weight: var(--peso-semibold);
     font-size: var(--texto-xl);
     line-height: var(--linha-apertada);
-    color: #FFFFFF;
+    color: var(--texto-em-dark);
     margin: 0 0 var(--espaco-2) 0;
 }
 
@@ -1458,7 +1469,7 @@ a {
     font-family: var(--fonte-corpo);
     font-size: var(--texto-base);
     line-height: var(--linha-folgada);
-    color: rgba(255, 255, 255, 0.55);
+    color: var(--texto-em-dark-meta);
     margin: 0;
 }
 
@@ -1508,11 +1519,11 @@ a {
         bottom: auto;
         width: auto;
         height: 1px;
-        background-color: rgba(255, 255, 255, 0.1);
+        background-color: var(--borda-em-dark);
     }
 
     .processo-linha-fill {
-        background: linear-gradient(to right, var(--cor-destaque), rgba(245, 158, 11, 0.3), var(--cor-destaque));
+        background: linear-gradient(to right, var(--cor-destaque), var(--destaque-fade), var(--cor-destaque));
         transform: scaleX(0);
         transform-origin: left;
     }
