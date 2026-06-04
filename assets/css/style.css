@@ -42,6 +42,16 @@
     --hero-bg-primario: #1B3A6B;
     --hero-bg-secundario: #142A4F;
 
+    /* Card sobre fundo escuro */
+    --card-tint-em-dark: rgba(255, 255, 255, 0.04);
+    --card-tint-em-dark-hover: rgba(255, 255, 255, 0.07);
+    --borda-card-em-dark: rgba(255, 255, 255, 0.08);
+    --borda-card-em-dark-hover: rgba(255, 255, 255, 0.18);
+
+    /* Sombras do botão WhatsApp */
+    --sombra-sucesso: 0 6px 18px rgba(22, 163, 74, 0.35);
+    --sombra-sucesso-hover: 0 10px 24px rgba(22, 163, 74, 0.45);
+
     /* =============================================
        TIPOGRAFIA
     ============================================== */
@@ -711,7 +721,7 @@ a {
    ============================================== */
 #servicos {
     background-color: var(--cor-primaria);
-    color: #FFFFFF;
+    color: var(--texto-em-dark);
 }
 
 .services-header {
@@ -738,7 +748,7 @@ a {
     font-size: clamp(1.75rem, 5vw, var(--texto-4xl));
     line-height: var(--linha-apertada);
     letter-spacing: -0.02em;
-    color: #FFFFFF;
+    color: var(--texto-em-dark);
     margin: 0;
 }
 
@@ -751,6 +761,7 @@ a {
 .services-grid {
     display: grid;
     grid-template-columns: 1fr;
+    gap: var(--espaco-4);
 }
 
 .service-card {
@@ -759,49 +770,45 @@ a {
     flex-direction: column;
     gap: var(--espaco-3);
     padding: var(--espaco-8);
-    background-color: var(--cor-primaria);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Cpath d='M 20 0 L 0 0 0 20' fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1'/%3E%3C/svg%3E");
-    background-size: 20px 20px;
-    border-right: 1px dashed rgba(255, 255, 255, 0.1);
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
-    overflow: hidden;
+    background-color: var(--card-tint-em-dark);
+    border: 1px solid var(--borda-card-em-dark);
+    border-radius: var(--raio-lg);
+    transition: background-color var(--transicao-normal),
+                border-color var(--transicao-normal),
+                transform var(--transicao-normal);
 }
 
-.service-card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom right, transparent 40%, var(--cor-primaria) 100%);
-    pointer-events: none;
-    z-index: 0;
-}
-
-.service-card > * {
-    position: relative;
-    z-index: 1;
+.service-card:hover {
+    background-color: var(--card-tint-em-dark-hover);
+    border-color: var(--borda-card-em-dark-hover);
+    transform: translateY(-4px);
 }
 
 .service-num {
     font-family: var(--fonte-display);
     font-weight: var(--peso-bold);
-    font-size: var(--texto-sm);
-    color: rgba(255, 255, 255, 0.3);
-    letter-spacing: 0.05em;
+    font-size: var(--texto-2xl);
+    line-height: 1;
+    color: var(--destaque-soft);
+    letter-spacing: 0.02em;
     margin: 0;
 }
 
 .service-icon {
-    display: block;
-    width: 24px;
-    height: 24px;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--raio-md);
+    background-color: var(--destaque-tint);
     color: var(--cor-destaque);
     margin-top: var(--espaco-2);
 }
 
 .service-icon svg {
     display: block;
-    width: 100%;
-    height: 100%;
+    width: 22px;
+    height: 22px;
 }
 
 .service-name {
@@ -809,7 +816,7 @@ a {
     font-weight: var(--peso-semibold);
     font-size: var(--texto-xl);
     line-height: var(--linha-apertada);
-    color: #FFFFFF;
+    color: var(--texto-em-dark);
     margin: var(--espaco-2) 0 0 0;
 }
 
@@ -817,7 +824,7 @@ a {
     font-family: var(--fonte-corpo);
     font-size: var(--texto-base);
     line-height: var(--linha-folgada);
-    color: rgba(255, 255, 255, 0.65);
+    color: var(--texto-em-dark-suave);
     margin: 0;
 }
 
@@ -834,7 +841,20 @@ a {
     font-family: var(--fonte-corpo);
     font-size: var(--texto-sm);
     line-height: var(--linha-normal);
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--texto-em-dark-meta);
+    padding-left: var(--espaco-4);
+    position: relative;
+}
+
+.service-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 6px;
+    height: 6px;
+    border-radius: var(--raio-full);
+    background-color: var(--cor-destaque);
 }
 
 /* =============================================
@@ -854,16 +874,16 @@ a {
     font-weight: var(--peso-semibold);
     font-size: var(--texto-base);
     text-decoration: none;
-    box-shadow: 0 6px 18px rgba(22, 163, 74, 0.35);
+    box-shadow: var(--sombra-sucesso);
     transition: transform var(--transicao-rapida), background-color var(--transicao-rapida),
         box-shadow var(--transicao-rapida);
     cursor: pointer;
 }
 
 .btn-whatsapp:hover {
-    background-color: #15803D;
+    background-color: var(--sucesso-hover);
     transform: translateY(-2px);
-    box-shadow: 0 10px 22px rgba(22, 163, 74, 0.4);
+    box-shadow: var(--sombra-sucesso-hover);
 }
 
 .btn-whatsapp:focus-visible {
@@ -899,18 +919,6 @@ a {
     .services-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-
-    .service-card:nth-child(2n) {
-        border-right: none;
-    }
-
-    .service-card:nth-last-child(-n+2) {
-        border-bottom: none;
-    }
-
-    .service-card:last-child:nth-child(odd) {
-        border-right: none;
-    }
 }
 
 @media (min-width: 1024px) {
@@ -924,19 +932,6 @@ a {
 
     .services-grid {
         grid-template-columns: repeat(3, 1fr);
-    }
-
-    .service-card {
-        border-right: 1px dashed rgba(255, 255, 255, 0.1);
-        border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
-    }
-
-    .service-card:nth-child(3n) {
-        border-right: none;
-    }
-
-    .service-card:nth-last-child(-n+3) {
-        border-bottom: none;
     }
 }
 
