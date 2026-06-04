@@ -1092,6 +1092,195 @@ a {
 }
 
 /* =============================================
+     CONTATO / FAQ — última parada de conversão
+   ============================================= */
+.contato-section {
+    background-color: var(--cor-primaria);
+    color: var(--cor-superficie);
+    position: relative;
+    overflow: hidden;
+}
+
+.contato-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M 40 0 L 0 0 0 40' fill='none' stroke='rgba(255,255,255,0.04)' stroke-width='1'/%3E%3C/svg%3E");
+    background-size: 40px 40px;
+    pointer-events: none;
+}
+
+.contato-section > .container {
+    position: relative;
+    z-index: 1;
+}
+
+.contato-header {
+    text-align: center;
+    margin-bottom: var(--espaco-12);
+    max-width: 640px;
+    margin-inline: auto;
+}
+
+.contato-title {
+    color: var(--cor-superficie);
+    margin-top: var(--espaco-3);
+}
+
+.contato-sub {
+    font-family: var(--fonte-corpo);
+    font-size: var(--texto-lg);
+    line-height: var(--linha-normal);
+    color: rgba(255, 255, 255, 0.7);
+    margin: var(--espaco-4) auto 0;
+}
+
+.contato-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--espaco-12);
+}
+
+.contato-bloco-titulo {
+    font-family: var(--fonte-display);
+    font-weight: var(--peso-semibold);
+    font-size: var(--texto-sm);
+    color: var(--cor-destaque);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin: 0 0 var(--espaco-6) 0;
+}
+
+/* --- FAQ accordion (dark) --- */
+.faq {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.faq__pergunta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--espaco-4);
+    padding: var(--espaco-5) 0;
+    cursor: pointer;
+    font-family: var(--fonte-display);
+    font-weight: var(--peso-semibold);
+    font-size: var(--texto-lg);
+    color: var(--cor-superficie);
+    list-style: none;
+    transition: color var(--transicao-rapida);
+}
+
+.faq__pergunta::-webkit-details-marker { display: none; }
+
+.faq__pergunta:hover { color: var(--cor-destaque); }
+
+.faq__icone {
+    flex-shrink: 0;
+    color: var(--cor-destaque);
+    transition: transform var(--transicao-normal);
+}
+
+.faq[open] .faq__icone { transform: rotate(180deg); }
+
+.faq__resposta {
+    padding: 0 0 var(--espaco-5) 0;
+    color: rgba(255, 255, 255, 0.7);
+    font-family: var(--fonte-corpo);
+    font-size: var(--texto-base);
+    line-height: var(--linha-folgada);
+}
+
+.faq__resposta p { margin: 0; }
+
+.faq__resposta strong { color: var(--cor-superficie); }
+
+.faq:last-child {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* --- Bloco de info (WhatsApp/email/horário) --- */
+.contato-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaco-4);
+}
+
+.contato-lista {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaco-4);
+}
+
+.contato-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--espaco-3);
+    padding: var(--espaco-4);
+    background-color: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--raio-lg);
+}
+
+.contato-item-icone {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: var(--raio-full);
+    background-color: rgba(245, 158, 11, 0.12);
+    color: var(--cor-destaque);
+}
+
+.contato-item-titulo {
+    display: block;
+    font-family: var(--fonte-display);
+    font-weight: var(--peso-semibold);
+    font-size: var(--texto-sm);
+    color: var(--cor-superficie);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 2px;
+}
+
+.contato-item-texto {
+    display: block;
+    font-family: var(--fonte-corpo);
+    font-size: var(--texto-sm);
+    line-height: var(--linha-normal);
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.contato-cta {
+    align-self: flex-start;
+    margin-top: var(--espaco-2);
+}
+
+.contato-aviso {
+    font-family: var(--fonte-corpo);
+    font-size: var(--texto-xs);
+    color: rgba(255, 255, 255, 0.5);
+    line-height: var(--linha-normal);
+    margin: 0;
+    padding-top: var(--espaco-3);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.contato-aviso em { color: var(--cor-destaque); font-style: normal; font-weight: var(--peso-semibold); }
+
+@media (min-width: 1024px) {
+    .contato-grid {
+        grid-template-columns: 7fr 5fr;
+        gap: var(--espaco-16);
+        align-items: start;
+    }
+}
+
+/* =============================================
      COMO FUNCIONA — timeline com linha animada
    ============================================== */
 .processo-section {
