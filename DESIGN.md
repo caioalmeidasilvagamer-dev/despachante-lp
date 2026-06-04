@@ -379,6 +379,7 @@ de design na landing page. Antes de mudar CSS, leia (e atualize) este arquivo.
 - ❌ Não colocar emoji em UI de produção.
 - ❌ Não criar sombra custom — usar uma das 4 existentes.
 - ❌ Não usar `position: absolute` para layout principal (só para elementos decorativos).
+- ❌ Não escrever hex/rgba inline dentro de `data:image/svg+xml`. Para tornar uma imagem decorativa token-driven, mova para `assets/svg/*.svg` e use `background-image: url(...)` apontando para o arquivo. Exceção atual: o grid pattern de hero/serviços (`stroke='rgba(255,255,255,0.04)'` no URL) — substituir só se redecorar essas seções.
 
 ---
 
