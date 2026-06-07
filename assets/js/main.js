@@ -137,6 +137,50 @@
         });
     }
 
+    // =============================================
+    // FORMULÁRIO DE CONTATO — redireciona para WhatsApp
+    // =============================================
+    function initContatoForm() {
+        const contatoForm = document.getElementById('contato-form');
+
+        if (!contatoForm) return;
+
+        contatoForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const nome     = document.getElementById('contato-nome')?.value.trim()     || '';
+            const telefone = document.getElementById('contato-telefone')?.value.trim() || '';
+            const servico  = document.getElementById('contato-servico')?.value          || '';
+            const mensagem = document.getElementById('contato-mensagem')?.value.trim() || '';
+
+            const servicoLabels = {
+                transferencia:  'Transferência de Veículo',
+                licenciamento:  'Licenciamento Anual (CRLV)',
+                emplacamento:   'Emplacamento Novo',
+                multas:         'Regularização de Multas',
+                'segunda-via':  'Segunda Via de Documentos',
+                inventario:     'Inventário de Veículo',
+                outro:          'Outro assunto',
+            };
+
+            const servicoTexto = servicoLabels[servico] || servico || 'Não informado';
+
+            const linhas = [
+                `Olá! Vim pelo site e gostaria de um atendimento.`,
+                ``,
+                `*Nome:* ${nome || 'Não informado'}`,
+                `*Telefone:* ${telefone || 'Não informado'}`,
+                `*Serviço:* ${servicoTexto}`,
+                mensagem ? `*Mensagem:* ${mensagem}` : '',
+            ].filter(l => l !== undefined);
+
+            const texto = linhas.join('\n');
+            const url   = `https://wa.me/5521995462016?text=${encodeURIComponent(texto)}`;
+
+            window.open(url, '_blank', 'noopener');
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         initHeader();
         initRevealOnScroll();
@@ -144,6 +188,7 @@
         initHero();
         initHeroCarousel();
         initMobileMenu();
+        initContatoForm();
     });
 })();
 
