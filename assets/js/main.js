@@ -222,3 +222,143 @@
 
     reveals.forEach(el => stepObs.observe(el));
 })();
+
+// =============================================
+// SIMULADOR DE PONTOS NA CNH
+// =============================================
+(function () {
+  const PONTOS  = { leve: 3, media: 4, grave: 5, gravissima: 7 };
+  const VALORES = { leve: 88.38, media: 130.16, grave: 195.23, gravissima: 293.47 };
+  const WA_NUM  = '5521995462016';
+
+  const counts = { leve: 0, media: 0, grave: 0, gravissima: 0 };
+
+  function $(id) { return document.getElementById(id); }
+
+  function calcular() {
+    const total       = Object.keys(counts).reduce((s, k) => s + counts[k] * PONTOS[k], 0);
+    const totalMultas = Object.values(counts).reduce((s, v) => s + v, 0);
+    const valor       = Object.keys(counts).reduce((s, k) => s + counts[k] * VALORES[k], 0);
+    const recorriveis = Math.ceil(totalMultas * 0.7);
+    const ptsRecurso  = Math.round(Object.keys(counts).reduce((s, k) => s + Math.ceil(counts[k] * 0.7) * PONTOS[k], 0));
+    const posRecurso  = Math.max(0, total - ptsRecurso);
+    const pct         = Math.min(100, Math.round((total / 20) * 100));
+    const faltam      = Math.max(0, 20 - total);
+
+    $('sim-total-pts').textContent   = total;
+    $('sim-recorriveis').textContent = recorriveis;
+    $('sim-pts-recurso').textContent = ptsRecurso;
+    $('sim-valor-total').textContent = valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+    const posEl = $('sim-pos-recurso');
+    posEl.textContent = posRecurso + ' pts';
+    posEl.className   = 'sim-stat-val ' + (posRecurso < 15 ? 'sim-green' : posRecurso < 20 ? 'sim-amber' : 'sim-red');
+
+    const barra = $('sim-barra');
+    barra.style.width      = pct + '%';
+    barra.style.background = pct < 50 ? '#22c55e' : pct < 80 ? '#F5A623' : '#ef4444';
+
+    const barraAria = $('sim-barra-aria');
+    if (barraAria) barraAria.setAttribute('aria-valuenow', Math.min(total, 20));
+
+    $('sim-faltam').textContent = total === 0
+      ? 'Adicione multas para ver sua situação'
+      : faltam > 0
+        ? 'Faltam ' + faltam + ' ponto(s) para a suspensão'
+        : 'Limite atingido — suspensão iminente';
+
+    const statusEl = $('sim-status');
+    const ctaEl    = $('sim-cta');
+    let ctaTitulo  = '';
+    let ctaSub     = '';
+    let statusHTML = '';
+    let msgWA      = '';
+
+    if (total === 0) {
+      statusHTML = `<div class="sim-status-card sim-status--ok">
+        <span class="sim-status-icon" style="color:#22c55e" aria-hidden="true">✓</span>
+        <div>
+          <div class="sim-status-titulo" style="color:#22c55e">CNH regularizada</div>
+          <div class="sim-status-desc" style="color:#86efac">Nenhuma infração registrada. Sua carteira está em dia.</div>
+        </div>
+      </div>`;
+      ctaEl.classList.remove('sim-cta--visible');
+    } else if (total < 10) {
+      statusHTML = `<div class="sim-status-card sim-status--ok">
+        <span class="sim-status-icon" style="color:#22c55e" aria-hidden="true">⚠</span>
+        <div>
+          <div class="sim-status-titulo" style="color:#22c55e">Situação tranquila por enquanto</div>
+          <div class="sim-status-desc" style="color:#86efac">Você tem ${total} pontos. Ainda está distante do limite, mas vale recorrer agora enquanto há tempo.</div>
+        </div>
+      </div>`;
+      ctaTitulo = 'Recorra agora antes que piore';
+      ctaSub    = `Com ${recorriveis} multa(s) com chance de recurso, posso reduzir sua pontuação para ${posRecurso} pontos. Análise gratuita.`;
+      msgWA     = `Olá! Fiz a simulação no site e tenho ${total} pontos na CNH. Gostaria de analisar o recurso das multas.`;
+    } else if (total < 20) {
+      statusHTML = `<div class="sim-status-card sim-status--aviso">
+        <span class="sim-status-icon" style="color:#F5A623" aria-hidden="true">!</span>
+        <div>
+          <div class="sim-status-titulo" style="color:#F5A623">Atenção — zona de risco</div>
+          <div class="sim-status-desc" style="color:#FCD34D">Você está com ${total} pontos. Faltam apenas ${faltam} ponto(s) para a suspensão. Qualquer nova infração pode ser fatal.</div>
+        </div>
+      </div>`;
+      ctaTitulo = 'Situação crítica — aja agora';
+      ctaSub    = `Posso analisar ${recorriveis} multa(s) com chance real de recurso e reduzir sua pontuação para ${posRecurso} pontos. Não espere mais.`;
+      msgWA     = `Olá! Fiz a simulação no site e tenho ${total} pontos na CNH — zona de risco! Preciso urgente de ajuda com recurso de multas.`;
+    } else {
+      statusHTML = `<div class="sim-status-card sim-status--risco">
+        <span class="sim-status-icon" style="color:#ef4444" aria-hidden="true">✕</span>
+        <div>
+          <div class="sim-status-titulo" style="color:#ef4444">CNH em risco de suspensão</div>
+          <div class="sim-status-desc" style="color:#fca5a5">Você atingiu ${total} pontos — acima do limite legal de 20 pts. O DETRAN pode notificar a suspensão a qualquer momento.</div>
+        </div>
+      </div>`;
+      ctaTitulo = 'Suspensão iminente — recurso urgente';
+      ctaSub    = `Com ${recorriveis} multa(s) recorríveis posso reduzir sua pontuação para ${posRecurso} pontos e evitar a suspensão. Me chama agora.`;
+      msgWA     = `URGENTE! Fiz a simulação no site e tenho ${total} pontos na CNH. Preciso de recurso urgente para evitar suspensão!`;
+    }
+
+    statusEl.innerHTML = statusHTML;
+
+    if (total > 0) {
+      $('sim-cta-titulo').textContent = ctaTitulo;
+      $('sim-cta-sub').textContent    = ctaSub;
+      $('sim-cta-btn').href           = `https://wa.me/${WA_NUM}?text=${encodeURIComponent(msgWA)}`;
+      ctaEl.classList.add('sim-cta--visible');
+    }
+  }
+
+  function iniciar() {
+    const section = document.getElementById('simulador');
+    if (!section) return;
+
+    section.querySelectorAll('.sim-btn-cnt').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tipo  = btn.dataset.tipo;
+        const delta = parseInt(btn.dataset.delta, 10);
+        counts[tipo] = Math.max(0, counts[tipo] + delta);
+        document.getElementById('sim-v-' + tipo).textContent = counts[tipo];
+        calcular();
+      });
+    });
+
+    const resetBtn = document.getElementById('sim-reset');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        Object.keys(counts).forEach(k => {
+          counts[k] = 0;
+          document.getElementById('sim-v-' + k).textContent = '0';
+        });
+        calcular();
+      });
+    }
+
+    calcular();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', iniciar);
+  } else {
+    iniciar();
+  }
+})();

@@ -2847,3 +2847,357 @@ h3.depoimento-nome {
         display: none;
     }
 }
+
+/* =============================================
+   SIMULADOR DE PONTOS NA CNH
+============================================== */
+.simulador-section {
+  background: #0d1829;
+  padding: clamp(4rem, 8vw, 7rem) 0;
+}
+
+.simulador-container {
+  width: min(100%, 1100px);
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 5vw, 5rem);
+}
+
+.simulador-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.simulador-badge {
+  display: inline-block;
+  background: #92400e;
+  color: #FCD34D;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  border-radius: 6px;
+  padding: 4px 14px;
+  margin-bottom: 1rem;
+}
+
+.simulador-titulo {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.2;
+  margin-bottom: .75rem;
+}
+
+.simulador-titulo em {
+  color: #F5A623;
+  font-style: italic;
+}
+
+.simulador-sub {
+  font-size: clamp(.9rem, 2vw, 1.05rem);
+  color: #94a3b8;
+  max-width: 520px;
+  margin-inline: auto;
+  line-height: 1.7;
+}
+
+.simulador-body {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* --- Cards de multa --- */
+.sim-multas-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.sim-multa-card {
+  background: #111827;
+  border: 1px solid #1e3a5f;
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sim-multa-tipo {
+  font-size: 14px;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.sim-multa-detalhe {
+  font-size: 11px;
+  color: #64748b;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.sim-multa-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.sim-multa-label {
+  font-size: 11px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  font-weight: 600;
+}
+
+.sim-count {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sim-btn-cnt {
+  background: #1e3a5f;
+  border: none;
+  color: #ffffff;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 120ms;
+  line-height: 1;
+}
+
+.sim-btn-cnt:hover { background: #2d5a8f; }
+.sim-btn-cnt:active { transform: scale(.95); }
+
+.sim-cnt-val {
+  font-size: 18px;
+  font-weight: 800;
+  color: #F5A623;
+  min-width: 22px;
+  text-align: center;
+}
+
+/* --- Resultado --- */
+.sim-resultado {
+  background: #111827;
+  border: 1px solid #1e3a5f;
+  border-radius: 14px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sim-res-topo {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.sim-pontos-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.sim-pontos-num {
+  font-size: 52px;
+  font-weight: 900;
+  color: #F5A623;
+  line-height: 1;
+}
+
+.sim-pontos-label {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 4px;
+  white-space: nowrap;
+}
+
+.sim-barra-wrap { flex: 1; min-width: 160px; }
+
+.sim-barra-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #64748b;
+  margin-bottom: 6px;
+}
+
+.sim-barra-bg {
+  background: #1e3a5f;
+  border-radius: 5px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.sim-barra-fill {
+  height: 100%;
+  border-radius: 5px;
+  width: 0%;
+  background: #22c55e;
+  transition: width 400ms ease, background 400ms ease;
+}
+
+.sim-faltam {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+.sim-reset {
+  background: none;
+  border: 1px solid #1e3a5f;
+  color: #64748b;
+  font-size: 12px;
+  border-radius: 6px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 120ms;
+  white-space: nowrap;
+  align-self: flex-start;
+}
+
+.sim-reset:hover { border-color: #F5A623; color: #F5A623; }
+
+/* --- Status --- */
+.sim-status-card {
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.sim-status-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.sim-status-titulo {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.sim-status-desc {
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.sim-status--ok    { background: #0f2a1a; border: 1px solid #166534; }
+.sim-status--aviso { background: #2a1a00; border: 1px solid #92400e; }
+.sim-status--risco { background: #2a0a0a; border: 1px solid #991b1b; }
+
+/* --- Stats --- */
+.sim-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.sim-stat-card {
+  background: #0d1829;
+  border: 1px solid #1e3a5f;
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sim-stat-label {
+  font-size: 11px;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  font-weight: 600;
+}
+
+.sim-stat-val {
+  font-size: 22px;
+  font-weight: 800;
+  color: #e2e8f0;
+}
+
+.sim-stat-val.sim-amber { color: #F5A623; }
+.sim-stat-val.sim-green { color: #22c55e; }
+.sim-stat-val.sim-red   { color: #ef4444; }
+
+/* --- CTA --- */
+.sim-cta {
+  background: #0d1829;
+  border: 1px solid #b45309;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  display: none;
+}
+
+.sim-cta.sim-cta--visible { display: block; }
+
+.sim-cta-titulo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.sim-cta-sub {
+  font-size: 13px;
+  color: #94a3b8;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.sim-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #25D366;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  border-radius: 8px;
+  padding: 13px 26px;
+  transition: background 150ms, transform 100ms;
+}
+
+.sim-cta-btn:hover {
+  background: #1fb85a;
+  transform: translateY(-1px);
+}
+
+.sim-cta-hint {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 10px;
+}
+
+/* --- Responsive --- */
+@media (max-width: 900px) {
+  .simulador-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .sim-multas-grid { grid-template-columns: 1fr; }
+  .sim-stats-grid  { grid-template-columns: 1fr; }
+  .sim-res-topo    { flex-direction: column; align-items: stretch; }
+}
