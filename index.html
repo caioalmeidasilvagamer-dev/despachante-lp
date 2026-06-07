@@ -178,6 +178,7 @@
 
              <!-- NAV — desktop only -->
             <nav class="header__nav" aria-label="Menu principal" id="header-nav">
+                <a href="#simulador" class="header__nav-link">Simulador</a>
                 <a href="#servicos" class="header__nav-link">Serviços</a>
                 <a href="#como-funciona" class="header__nav-link">Como funciona</a>
                 <a href="#depoimentos" class="header__nav-link">Depoimentos</a>
@@ -358,6 +359,138 @@
             </div>
         </section>
         </blueprint-shader-grid>
+
+        <!-- 🔵 SIMULADOR — Pontos na CNH (engajamento + captura lead) -->
+        <section id="simulador" class="simulador-section">
+            <div class="simulador-container">
+
+                <div class="simulador-header">
+                    <span class="simulador-badge">simulador gratuito</span>
+                    <h2 class="simulador-titulo">Sua CNH está em <em>risco?</em></h2>
+                    <p class="simulador-sub">Informe quantas multas você levou nos últimos 12 meses
+                        e descubra sua situação real em segundos.</p>
+                </div>
+
+                <div class="simulador-body">
+
+                    <div class="sim-multas-grid">
+
+                        <div class="sim-multa-card">
+                            <div class="sim-multa-tipo">Leve</div>
+                            <div class="sim-multa-detalhe">3 pontos · ex: celular no semáforo parado</div>
+                            <div class="sim-multa-row">
+                                <span class="sim-multa-label">Quantidade</span>
+                                <div class="sim-count">
+                                    <button class="sim-btn-cnt" data-tipo="leve" data-delta="-1" aria-label="Diminuir multas leves">−</button>
+                                    <span class="sim-cnt-val" id="sim-v-leve">0</span>
+                                    <button class="sim-btn-cnt" data-tipo="leve" data-delta="1" aria-label="Aumentar multas leves">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sim-multa-card">
+                            <div class="sim-multa-tipo">Média</div>
+                            <div class="sim-multa-detalhe">4 pontos · ex: estacionar em local proibido</div>
+                            <div class="sim-multa-row">
+                                <span class="sim-multa-label">Quantidade</span>
+                                <div class="sim-count">
+                                    <button class="sim-btn-cnt" data-tipo="media" data-delta="-1" aria-label="Diminuir multas médias">−</button>
+                                    <span class="sim-cnt-val" id="sim-v-media">0</span>
+                                    <button class="sim-btn-cnt" data-tipo="media" data-delta="1" aria-label="Aumentar multas médias">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sim-multa-card">
+                            <div class="sim-multa-tipo">Grave</div>
+                            <div class="sim-multa-detalhe">5 pontos · ex: avançar sinal vermelho</div>
+                            <div class="sim-multa-row">
+                                <span class="sim-multa-label">Quantidade</span>
+                                <div class="sim-count">
+                                    <button class="sim-btn-cnt" data-tipo="grave" data-delta="-1" aria-label="Diminuir multas graves">−</button>
+                                    <span class="sim-cnt-val" id="sim-v-grave">0</span>
+                                    <button class="sim-btn-cnt" data-tipo="grave" data-delta="1" aria-label="Aumentar multas graves">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sim-multa-card">
+                            <div class="sim-multa-tipo">Gravíssima</div>
+                            <div class="sim-multa-detalhe">7–10 pts · ex: embriaguez ao volante</div>
+                            <div class="sim-multa-row">
+                                <span class="sim-multa-label">Quantidade</span>
+                                <div class="sim-count">
+                                    <button class="sim-btn-cnt" data-tipo="gravissima" data-delta="-1" aria-label="Diminuir multas gravíssimas">−</button>
+                                    <span class="sim-cnt-val" id="sim-v-gravissima">0</span>
+                                    <button class="sim-btn-cnt" data-tipo="gravissima" data-delta="1" aria-label="Aumentar multas gravíssimas">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="sim-resultado">
+
+                        <div class="sim-res-topo">
+                            <div class="sim-pontos-display">
+                                <span class="sim-pontos-num" id="sim-total-pts">0</span>
+                                <span class="sim-pontos-label">pontos acumulados</span>
+                            </div>
+                            <div class="sim-barra-wrap">
+                                <div class="sim-barra-labels">
+                                    <span>0 pts</span>
+                                    <span>limite: 20 pts</span>
+                                </div>
+                                <div class="sim-barra-bg" role="progressbar" aria-valuemin="0" aria-valuemax="20" aria-valuenow="0" id="sim-barra-aria">
+                                    <div class="sim-barra-fill" id="sim-barra"></div>
+                                </div>
+                                <p class="sim-faltam" id="sim-faltam">Adicione multas para ver sua situação</p>
+                            </div>
+                            <button class="sim-reset" id="sim-reset" aria-label="Reiniciar simulação">Reiniciar</button>
+                        </div>
+
+                        <div class="sim-status" id="sim-status"></div>
+
+                        <div class="sim-stats-grid">
+                            <div class="sim-stat-card">
+                                <span class="sim-stat-label">Multas recorríveis</span>
+                                <span class="sim-stat-val" id="sim-recorriveis">0</span>
+                            </div>
+                            <div class="sim-stat-card">
+                                <span class="sim-stat-label">Pontos que posso retirar</span>
+                                <span class="sim-stat-val sim-green" id="sim-pts-recurso">0</span>
+                            </div>
+                            <div class="sim-stat-card">
+                                <span class="sim-stat-label">Valor estimado das multas</span>
+                                <span class="sim-stat-val sim-amber" id="sim-valor-total">R$ 0,00</span>
+                            </div>
+                            <div class="sim-stat-card">
+                                <span class="sim-stat-label">Situação após recurso</span>
+                                <span class="sim-stat-val" id="sim-pos-recurso">0 pts</span>
+                            </div>
+                        </div>
+
+                        <div class="sim-cta" id="sim-cta" aria-live="polite">
+                            <p class="sim-cta-titulo" id="sim-cta-titulo"></p>
+                            <p class="sim-cta-sub" id="sim-cta-sub"></p>
+                            <a class="sim-cta-btn"
+                               id="sim-cta-btn"
+                               href="#"
+                               target="_blank"
+                               rel="noopener"
+                               aria-label="Falar com o despachante no WhatsApp">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                                </svg>
+                                Falar com o despachante agora
+                            </a>
+                            <p class="sim-cta-hint">Resposta em até 1h · Análise gratuita e sem compromisso</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- ⚫ SÓLIDO — Serviços (leitura densa, sem shader) -->
         <section id="servicos" class="secao secao-solida-apos-shader bg-solido">
