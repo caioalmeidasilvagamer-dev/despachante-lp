@@ -50,32 +50,130 @@
         targets.forEach(function (el) { observer.observe(el); });
     }
 
+    function initHero() {
+        const hero = document.getElementById('hero');
+        if (!hero) return;
+
+        requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+                hero.classList.add('hero--animado');
+            });
+        });
+    }
+
+    function initHeroCarousel() {
+        const carousel = document.querySelector('.hero__cards');
+        const dots = document.querySelectorAll('.hero__carousel-dot');
+        if (!carousel || dots.length === 0) return;
+
+        carousel.addEventListener('scroll', function () {
+            const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+            if (maxScroll <= 0) return;
+
+            const percent = carousel.scrollLeft / maxScroll;
+            let activeIndex = Math.round(percent * (dots.length - 1));
+
+            dots.forEach((dot, index) => {
+                if (index === activeIndex) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }, { passive: true });
+    }
+
+    function initScrollAnim() {
+        const targets = document.querySelectorAll('.anim');
+        if (!targets.length) return;
+        
+        if (!('IntersectionObserver' in window)) {
+            targets.forEach(function (el) { el.classList.add('visible'); });
+            return;
+        }
+
+        const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const delay = parseInt(el.getAttribute('data-delay') || '0');
+                    if (delay > 0) {
+                        el.style.transitionDelay = (delay * 100) + 'ms';
+                    }
+                    el.classList.add('visible');
+                    el.addEventListener('transitionend', function() {
+                        el.style.willChange = 'auto';
+                    }, { once: true });
+                    observer.unobserve(el);
+                }
+            });
+        }, {
+            threshold: 0.12,
+            rootMargin: '0px 0px -40px 0px'
+        });
+
+        targets.forEach(function (el) { observer.observe(el); });
+    }
+
+    function initMobileMenu() {
+        const toggle = document.querySelector('.header__toggle');
+        const nav = document.querySelector('.header__nav');
+        if (!toggle || !nav) return;
+
+        toggle.addEventListener('click', function () {
+            const expanded = toggle.getAttribute('aria-expanded') === 'true';
+            toggle.setAttribute('aria-expanded', !expanded);
+            nav.classList.toggle('header__nav--open');
+            document.body.classList.toggle('no-scroll');
+        });
+
+        // Close menu on link click
+        nav.querySelectorAll('.header__nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                toggle.setAttribute('aria-expanded', 'false');
+                nav.classList.remove('header__nav--open');
+                document.body.classList.remove('no-scroll');
+            });
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         initHeader();
         initRevealOnScroll();
+        initScrollAnim();
+        initHero();
+        initHeroCarousel();
+        initMobileMenu();
     });
 })();
 
 (function initProcessoTimeline() {
     const section = document.querySelector('.processo-section');
-    const linhaFill = document.getElementById('processo-linha-fill');
-    const reveals = document.querySelectorAll('.processo-reveal');
     if (!section) return;
-    const lineObserver = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) {
-            if (linhaFill) linhaFill.classList.add('active');
-            lineObserver.disconnect();
-        }
+
+    const linhaFill  = document.getElementById('processo-linha-fill');
+    const pulso1     = document.getElementById('processo-pulso-1');
+    const pulso2     = document.getElementById('processo-pulso-2');
+    const reveals    = document.querySelectorAll('.processo-reveal');
+
+    const lineObs = new IntersectionObserver(entries => {
+        if (!entries[0].isIntersecting) return;
+        if (linhaFill) linhaFill.classList.add('active');
+        if (pulso1)    pulso1.classList.add('active');
+        if (pulso2)    pulso2.classList.add('active');
+        lineObs.disconnect();
     }, { threshold: 0.3 });
-    lineObserver.observe(section);
-    const stepObserver = new IntersectionObserver(entries => {
+
+    lineObs.observe(section);
+
+    const stepObs = new IntersectionObserver(entries => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const delay = parseInt(entry.target.dataset.delay || '0') * 120;
-                setTimeout(() => entry.target.classList.add('visible'), delay);
-                stepObserver.unobserve(entry.target);
-            }
+            if (!entry.isIntersecting) return;
+            const delay = parseInt(entry.target.dataset.delay || '0') * 130;
+            setTimeout(() => entry.target.classList.add('visible'), delay);
+            stepObs.unobserve(entry.target);
         });
     }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-    reveals.forEach(el => stepObserver.observe(el));
+
+    reveals.forEach(el => stepObs.observe(el));
 })();
