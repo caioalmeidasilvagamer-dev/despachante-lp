@@ -530,106 +530,128 @@ async function carregarCTB() {
 })();
 
 // =============================================
-// SIMULADOR DE SITUAÇÃO DO VEÍCULO
+// SIMULADOR DE RECURSO DE MULTA
 // =============================================
-(function initVeiculo() {
-  var btn = document.getElementById('veiculo-consultar');
-  var placaInput = document.getElementById('veiculo-placa');
-  if (!btn || !placaInput) return;
+(function initRecurso() {
+  var btn = document.getElementById('recurso-calcular');
+  if (!btn) return;
 
   var WA_NUM = '5521995462016';
+  var PRAZO_JARI = 30;
 
-  var CHECKLIST_ITEMS = [
-    { label: 'Licenciamento (CRLV)', key: 'licenciamento' },
-    { label: 'IPVA — ' + (new Date().getFullYear() - 1), key: 'ipva' },
-    { label: 'DPVAT', key: 'dpvat' },
-    { label: 'Multas de trânsito', key: 'multas' },
-    { label: 'Restrição judicial', key: 'restricao' },
-    { label: 'Alarme anti-furto', key: 'alarme' },
-  ];
-
-  function seededRandom(seed) {
-    var x = Math.sin(seed) * 10000;
-    return x - Math.floor(x);
+  function fmt(v) {
+    return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   }
 
-  function gerarChecklist(placa) {
-    var seed = 0;
-    for (var i = 0; i < placa.length; i++) seed += placa.charCodeAt(i) * (i + 1);
-    var items = [];
-    var temProblema = false;
-    CHECKLIST_ITEMS.forEach(function (item, idx) {
-      var r = seededRandom(seed + idx * 7);
-      var ok;
-      if (item.key === 'alarme') {
-        ok = r > 0.4;
-      } else if (item.key === 'restricao') {
-        ok = r > 0.15;
-      } else {
-        ok = r > 0.25;
-      }
-      items.push({ label: item.label, ok: ok });
-      if (!ok) temProblema = true;
-    });
-    return { items: items, temProblema: temProblema };
+  function fmtDate(d) {
+    var nomesMes = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+    return d.getDate() + ' de ' + nomesMes[d.getMonth()] + ' de ' + d.getFullYear();
   }
 
   btn.addEventListener('click', function () {
-    var placa = placaInput.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
-    if (placa.length < 5) {
-      placaInput.focus();
+    var dataNotif = document.getElementById('recurso-data-notif').value;
+    var valorInput = document.getElementById('recurso-valor').value;
+    var status = document.getElementById('recurso-status').value;
+
+    if (!dataNotif) {
+      document.getElementById('recurso-data-notif').focus();
+      return;
+    }
+    if (!valorInput || parseFloat(valorInput) <= 0) {
+      document.getElementById('recurso-valor').focus();
       return;
     }
 
-    var display = document.getElementById('veiculo-placa-display');
-    var formatted = placa.length === 7
-      ? placa.slice(0, 3) + '-' + placa.slice(3)
-      : placa;
-    display.textContent = formatted;
+    var valorMulta = parseFloat(valorInput);
+    var data = new Date(dataNotif + 'T00:00:00');
+    var hoje = new Date();
+    var diffMs = hoje - data;
+    var diasDesdeNotif = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    var diasRestantes = Math.max(0, PRAZO_JARI - diasDesdeNotif);
+    var dataPrazoFim = new Date(data);
+    dataPrazoFim.setDate(dataPrazoFim.getDate() + PRAZO_JARI);
 
-    var resultado = gerarChecklist(placa);
-    var checklistEl = document.getElementById('veiculo-checklist');
-    checklistEl.innerHTML = resultado.items.map(function (item) {
-      var iconClass = item.ok ? 'sim-check-icon sim-check-icon--ok' : 'sim-check-icon sim-check-icon--pendente';
-      var symbol = item.ok ? '&#10003;' : '&#10007;';
-      return '<div class="sim-check-item"><span class="' + iconClass + '">' + symbol + '</span><span>' + item.label + '</span></div>';
-    }).join('');
+    var descontoDisponivel = 0;
+    var economia = valorMulta;
+    var instancia = '';
 
-    var badge = document.getElementById('veiculo-badge');
-    if (resultado.temProblema) {
-      badge.textContent = 'Pendências';
+    if (status === 'nao_paga') {
+      descontoDisponivel = valorMulta * 0.2;
+      economia = valorMulta;
+      instancia = 'JARI — 1ª Instância';
+    } else if (status === 'paga_sem_desconto') {
+      economia = valorMulta;
+      instancia = 'JARI — 1ª Instância';
+    } else {
+      economia = valorMulta * 0.8;
+      instancia = 'JARI — 1ª Instância';
+    }
+
+    if (diasRestantes <= 0) {
+      instancia = 'JARI — 1ª Instância (verificar prazo com órgão)';
+    }
+
+    var pctBarra = Math.min(100, Math.max(0, (diasRestantes / PRAZO_JARI) * 100));
+    var barraColor = '#22c55e';
+    if (pctBarra < 50) barraColor = '#f59e0b';
+    if (pctBarra < 20) barraColor = '#ef4444';
+
+    document.getElementById('recurso-dias').textContent = diasRestantes;
+    document.getElementById('recurso-prazo-fim').textContent = fmtDate(dataPrazoFim);
+    document.getElementById('recurso-valor-display').textContent = fmt(valorMulta);
+    document.getElementById('recurso-economia').textContent = fmt(economia);
+    document.getElementById('recurso-desconto').textContent = fmt(descontoDisponivel);
+    document.getElementById('recurso-instancia').textContent = instancia;
+    document.getElementById('recurso-cron-label').textContent =
+      diasRestantes > 0
+        ? 'Prazo restante para recurso na JARI (' + diasRestantes + ' dias)'
+        : 'Prazo expirado — verificar com órgão';
+    document.getElementById('recurso-cron-barra').style.width = pctBarra + '%';
+    document.getElementById('recurso-cron-barra').style.background = barraColor;
+    document.getElementById('recurso-cron-fim').textContent = fmtDate(dataPrazoFim);
+
+    var badge = document.getElementById('recurso-badge');
+    var alerta = document.getElementById('recurso-alerta');
+    var alertaTxt = document.getElementById('recurso-alerta-txt');
+    var alertaIcon = document.getElementById('recurso-alerta-icon');
+
+    if (diasRestantes <= 0) {
+      badge.textContent = 'Expirado';
       badge.style.background = '#2a0a0a';
       badge.style.color = '#ef4444';
+      alerta.style.display = 'flex';
+      alerta.style.background = '#2a0a0a';
+      alerta.style.color = '#ef4444';
+      alertaIcon.style.stroke = '#ef4444';
+      alertaTxt.innerHTML =
+        '<strong>Prazo expirado.</strong> O prazo de 30 dias para recurso na JARI (' +
+        fmtDate(dataPrazoFim) + ') já encerrou. Entre em contato com um despachante para avaliar as opções.';
+    } else if (diasRestantes <= 10) {
+      badge.textContent = 'Urgente';
+      badge.style.background = '#2a1a0a';
+      badge.style.color = '#f59e0b';
+      alerta.style.display = 'flex';
+      alerta.style.background = '#2a1a0a';
+      alerta.style.color = '#f59e0b';
+      alertaIcon.style.stroke = '#f59e0b';
+      alertaTxt.innerHTML =
+        '<strong>Prazo próximo.</strong> Restam apenas ' + diasRestantes +
+        ' dias para apresentar o recurso na JARI. Não perca o prazo!';
     } else {
-      badge.textContent = 'Regular';
+      badge.textContent = 'Dentro do prazo';
       badge.style.background = '#0f2a1a';
       badge.style.color = '#22c55e';
+      alerta.style.display = 'none';
     }
 
-    var alertaEl = document.getElementById('veiculo-alerta');
-    var alertaTxt = document.getElementById('veiculo-alerta-txt');
-    if (resultado.temProblema) {
-      alertaEl.style.display = 'flex';
-      alertaEl.style.background = '#2a0a0a';
-      alertaEl.style.color = '#ef4444';
-      alertaTxt.innerHTML = '<strong>Veículo com pendências.</strong> O veículo possui débitos ou restrições que precisam ser regularizados antes de transferir ou licenciar.';
-    } else {
-      alertaEl.style.display = 'flex';
-      alertaEl.style.background = '#0f2a1a';
-      alertaEl.style.color = '#22c55e';
-      alertaTxt.innerHTML = '<strong>Veículo regularizado.</strong> Nenhuma pendência encontrada na simulação. Confira o DETRAN para dados oficiais.';
-    }
+    document.getElementById('recurso-resultado').style.display = 'block';
 
-    document.getElementById('veiculo-resultado').style.display = 'block';
-
-    var msg = 'Olá! Consultei a situação do veículo ' + formatted + ' no site.\nGostaria de uma verificação oficial e orçamento.';
-    document.getElementById('veiculo-cta').href = 'https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msg);
-  });
-
-  placaInput.addEventListener('input', function () {
-    var v = placaInput.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
-    if (v.length > 3) v = v.slice(0, 3) + '-' + v.slice(3, 7);
-    placaInput.value = v;
+    var msg = 'Olá! Preciso de ajuda com um recurso de multa.\n' +
+      'Data da notificação: ' + fmtDate(data) + '\n' +
+      'Valor da multa: ' + fmt(valorMulta) + '\n' +
+      'Dias restantes: ' + diasRestantes + '\n' +
+      'Gostaria de uma análise do meu caso.';
+    document.getElementById('recurso-cta').href = 'https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msg);
   });
 })();
 
