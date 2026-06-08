@@ -3546,3 +3546,11 @@ h3.depoimento-nome {
   .sim-pron-campo:nth-child(2n)        { border-right: none; }
   .sim-pron-campo:nth-last-child(-n+2) { border-bottom: none; }
 }
+
+.sim-aviso-legal {
+  text-align: center;
+  font-size: 0.72rem;
+  color: #4b5563;
+  margin-top: 2rem;
+  padding: 0 1rem;
+}

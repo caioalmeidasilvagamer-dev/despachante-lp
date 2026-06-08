@@ -1,3 +1,11 @@
+let CTB = null;
+async function carregarCTB() {
+  if (CTB) return CTB;
+  const res = await fetch('assets/data/ctb.json');
+  CTB = await res.json();
+  return CTB;
+}
+
 (function () {
     'use strict';
 
@@ -227,8 +235,6 @@
 // SIMULADOR DE PONTOS NA CNH
 // =============================================
 (function () {
-  const PONTOS  = { leve:3, media:4, grave:5, gravissima:7 };
-  const VALORES = { leve:88.38, media:130.16, grave:195.23, gravissima:293.47 };
   const TIPOS   = { leve:'Leve', media:'Média', grave:'Grave', gravissima:'Gravíssima' };
   const CORES_INFRA = {
     leve:     { bg:'#0f2a1a', color:'#22c55e' },
@@ -242,11 +248,13 @@
   function $(id){ return document.getElementById(id); }
 
   function calcular(){
-    const total     = Object.keys(counts).reduce((s,k)=>s+counts[k]*PONTOS[k],0);
+    const pontos  = CTB.cnh.pontos;
+    const valores = CTB.cnh.valores;
+    const total     = Object.keys(counts).reduce((s,k)=>s+counts[k]*pontos[k],0);
     const totalM    = Object.values(counts).reduce((s,v)=>s+v,0);
-    const valor     = Object.keys(counts).reduce((s,k)=>s+counts[k]*VALORES[k],0);
+    const valor     = Object.keys(counts).reduce((s,k)=>s+counts[k]*valores[k],0);
     const recorriveis = Math.ceil(totalM*0.7);
-    const ptsRecurso  = Math.round(Object.keys(counts).reduce((s,k)=>s+Math.ceil(counts[k]*0.7)*PONTOS[k],0));
+    const ptsRecurso  = Math.round(Object.keys(counts).reduce((s,k)=>s+Math.ceil(counts[k]*0.7)*pontos[k],0));
     const posRecurso  = Math.max(0, total-ptsRecurso);
     const pct         = Math.min(100, Math.round(total/20*100));
     const faltam      = Math.max(0, 20-total);
@@ -293,7 +301,7 @@
               <span class="sim-pron-infra-qtd">${counts[k]}x</span>
               <span class="sim-pron-infra-pts"
                 style="background:${CORES_INFRA[k].bg};color:${CORES_INFRA[k].color}">
-                ${counts[k]*PONTOS[k]} pts
+                ${counts[k]*CTB.cnh.pontos[k]} pts
               </span>
             </div>
           </div>`).join('');
@@ -338,7 +346,8 @@
     });
   }
 
-  function iniciar(){
+  async function iniciar(){
+    CTB = await carregarCTB();
     const section = document.getElementById('simulador');
     if(!section) return;
 
@@ -406,16 +415,12 @@
 
   var WA_NUM = '5521995462016';
 
-  var ITCMD_RJ = 0.04;
-  var TAXA_DETRA_BASE = 173.64;
-  var VISTORIA_RJ = 169.98;
-  var HONORARIOS = 450;
-
   function fmt(v) {
     return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   }
 
-  btn.addEventListener('click', function () {
+  btn.addEventListener('click', async function () {
+    CTB = await carregarCTB();
     var valorRaw = parseFloat(document.getElementById('transf-valor').value) || 0;
     var origem   = document.getElementById('transf-origem').value;
     var destino  = document.getElementById('transf-destino').value;
@@ -426,14 +431,14 @@
       return;
     }
 
-    var valorITCMD = valorRaw * ITCMD_RJ;
+    var valorITCMD = valorRaw * CTB.transferencia.itcmd_rj;
     var multaAtraso = 0;
-    if (ano === 'antigo') multaAtraso = 52.82;
+    if (ano === 'antigo') multaAtraso = CTB.transferencia.multa_atraso;
     else if (ano === 'medio') multaAtraso = 0;
 
-    var taxaDetran = TAXA_DETRA_BASE + multaAtraso;
-    var vistoria = VISTORIA_RJ;
-    var honorarios = HONORARIOS;
+    var taxaDetran = CTB.transferencia.taxa_detran_base + multaAtraso;
+    var vistoria = CTB.transferencia.vistoria_rj;
+    var honorarios = CTB.transferencia.honorarios;
     var total = valorITCMD + taxaDetran + vistoria + honorarios;
 
     var prazo = '5 a 10 dias úteis';
@@ -565,8 +570,6 @@
   if (!btn) return;
 
   var WA_NUM = '5521995462016';
-  var MULTA_ATRASO = 293.47;
-  var IPVA_TAXA = 0.04;
 
   function fmt(v) {
     return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -576,7 +579,8 @@
     return new Date(ano, mes, 0).getDate();
   }
 
-  btn.addEventListener('click', function () {
+  btn.addEventListener('click', async function () {
+    CTB = await carregarCTB();
     var mes = parseInt(document.getElementById('licenc-mes').value, 10);
     var valorVenal = parseFloat(document.getElementById('licenc-valor').value) || 0;
 
@@ -600,20 +604,19 @@
     var nomesMes = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
     var vencimentoStr = nomesMes[vencimento.getMonth()] + ' / ' + vencimento.getFullYear();
 
-    var taxaDetran = 173.64;
     var multa = 0;
     var ipvaAtraso = 0;
     if (dias <= 0) {
-      multa = MULTA_ATRASO;
-      if (valorVenal > 0) ipvaAtraso = valorVenal * IPVA_TAXA;
+      multa = CTB.licenciamento.multa_atraso;
+      if (valorVenal > 0) ipvaAtraso = valorVenal * CTB.licenciamento.ipva_taxa;
     }
 
-    var totalAtraso = taxaDetran + multa + ipvaAtraso;
+    var totalAtraso = CTB.licenciamento.taxa_detran + multa + ipvaAtraso;
 
     document.getElementById('licenc-dias').textContent = dias > 0 ? dias + ' dias' : 'VENCIDO';
     document.getElementById('licenc-dias').style.color = dias > 30 ? '#22c55e' : dias > 0 ? '#F5A623' : '#ef4444';
     document.getElementById('licenc-vencimento').textContent = vencimentoStr;
-    document.getElementById('licenc-taxa').textContent = fmt(taxaDetran);
+    document.getElementById('licenc-taxa').textContent = fmt(CTB.licenciamento.taxa_detran);
     document.getElementById('licenc-multa').textContent = multa > 0 ? fmt(multa) + ' + juros' : '—';
     document.getElementById('licenc-ipva').textContent = ipvaAtraso > 0 ? fmt(ipvaAtraso) : '—';
     document.getElementById('licenc-total-atraso').textContent = fmt(totalAtraso);
@@ -658,7 +661,7 @@
       alertaEl.style.display = 'flex';
       alertaEl.style.background = '#2a0a0a';
       alertaEl.style.color = '#ef4444';
-      alertaTxt.innerHTML = '<strong>Licenciamento vencido.</strong> Multa de R$ 293,47 + juros e IPVA proporcional. O veículo pode ser recolhido a qualquer momento.';
+      alertaTxt.innerHTML = '<strong>Licenciamento vencido.</strong> Multa de ' + fmt(CTB.licenciamento.multa_atraso) + ' + juros e IPVA proporcional. O veículo pode ser recolhido a qualquer momento.';
     } else if (dias <= 30) {
       alertaEl.style.display = 'flex';
       alertaEl.style.background = '#2a1a00';
