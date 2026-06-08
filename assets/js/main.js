@@ -770,3 +770,21 @@ async function carregarCTB() {
     document.getElementById('licenc-cta').href = 'https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msg);
   });
 })();
+
+(function() {
+  var RESUME_MS = 10000;
+  var timers = {};
+  var colunas = document.querySelectorAll('.depoimentos-coluna-inner');
+  if (!colunas.length) return;
+
+  colunas.forEach(function(inner, i) {
+    inner.addEventListener('click', function() {
+      if (timers[i]) clearTimeout(timers[i]);
+      inner.classList.add('paused');
+      timers[i] = setTimeout(function() {
+        inner.classList.remove('paused');
+        delete timers[i];
+      }, RESUME_MS);
+    });
+  });
+})();
