@@ -355,6 +355,10 @@ a {
     .secao-solida-apos-shader::before {
         display: none;
     }
+
+    .diferenciais-item {
+        margin-block: 8px;
+    }
 }
 
 /* =============================================
@@ -3048,7 +3052,7 @@ h2.section-title em {
 }
 
 .sim-mc-visual {
-    height: 110px;
+    aspect-ratio: 16 / 9;
     position: relative;
     overflow: hidden;
     background: #0d1829;
@@ -3057,7 +3061,7 @@ h2.section-title em {
 .sim-mc-img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
     transition: transform 300ms ease;
 }
