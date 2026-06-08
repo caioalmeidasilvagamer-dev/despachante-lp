@@ -1748,7 +1748,7 @@ h2.section-title em {
     content: "";
     position: absolute;
     inset: 0;
-    background: var(--bg-base);
+    background: rgba(13, 24, 41, 0.55);
     z-index: 0;
     pointer-events: none;
 }
@@ -1778,7 +1778,7 @@ h2.section-title em {
     font-family: var(--fonte-corpo);
     font-size: 1.05rem;
     line-height: var(--linha-normal);
-    color: var(--cor-texto-suave);
+    color: #d4d4d4;
     margin: 0;
     max-width: 44ch;
 }
@@ -1803,17 +1803,21 @@ h2.section-title em {
     padding-block: var(--espaco-10);
     padding-inline: var(--espaco-4);
     margin-inline: calc(var(--espaco-4) * -1);
-    border-top: 1px solid var(--cor-borda);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: var(--raio-md);
     transition: background-color var(--transicao-normal), border-color var(--transicao-normal);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(13, 24, 41, 0.40);
+    border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .diferenciais-item:hover {
-    background-color: #111827;
+    background: rgba(255, 255, 255, 0.06);
 }
 
 .diferenciais-item:last-child {
-    border-bottom: 1px solid var(--cor-borda);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .diferenciais-item__num {
@@ -1822,7 +1826,7 @@ h2.section-title em {
     font-weight: 400;
     font-size: clamp(3.5rem, 7vw, 6rem);
     line-height: 1;
-    color: var(--cor-destaque-15);
+    color: var(--cor-destaque-30);
     align-self: flex-start;
     user-select: none;
     transition: color var(--transicao-normal);
@@ -1841,10 +1845,10 @@ h2.section-title em {
 
 .diferenciais-item__titulo {
     font-family: var(--fonte-corpo);
-    font-weight: 600;
-    font-size: 1.35rem;
+    font-weight: 700;
+    font-size: 1.4rem;
     line-height: var(--linha-apertada);
-    color: var(--cor-texto);
+    color: #f0f0f0;
     margin: 0;
     transition: color var(--transicao-normal);
 }
@@ -1857,7 +1861,7 @@ h2.section-title em {
     font-family: var(--fonte-corpo);
     font-size: 0.95rem;
     line-height: var(--linha-folgada);
-    color: var(--cor-texto-suave);
+    color: #d4d4d4;
     margin: 0;
     max-width: 52ch;
 }
