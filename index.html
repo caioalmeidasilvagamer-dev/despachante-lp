@@ -694,8 +694,13 @@
                                     <option value="antigo">2014 ou mais antigo</option>
                                 </select>
                             </div>
+                            <div class="sim-campo-grupo">
+                                <label class="sim-campo-label" for="transf-data-compra">Data de assinatura do recibo (compra/venda)</label>
+                                <input type="date" id="transf-data-compra" class="sim-input"/>
+                                <p class="sim-campo-hint">Prazo legal: 30 dias corridos a partir desta data (Art. 123 do CTB)</p>
+                            </div>
                             <button class="sim-calcular-btn" id="transf-calcular">
-                                Calcular custo total
+                                Calcular custo e prazo
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2" aria-hidden="true">
                                     <path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
@@ -744,6 +749,32 @@
                                         <div class="sim-pron-campo-label">Prazo estimado</div>
                                         <div class="sim-pron-campo-val" id="transf-prazo">—</div>
                                     </div>
+                                    <div class="sim-pron-campo">
+                                        <div class="sim-pron-campo-label">Dias para transferir</div>
+                                        <div class="sim-pron-campo-val sim-pron-grande" id="transf-dias-prazo">—</div>
+                                    </div>
+                                    <div class="sim-pron-campo">
+                                        <div class="sim-pron-campo-label">Multa se atrasar</div>
+                                        <div class="sim-pron-campo-val" id="transf-multa-atraso" style="color:#ef4444">—</div>
+                                    </div>
+                                </div>
+                                <div class="sim-licenc-cronometro" id="transf-cronometro" style="display:none">
+                                    <div class="sim-licenc-cron-label" id="transf-cron-label">Prazo para transferência</div>
+                                    <div class="sim-licenc-cron-barra-bg">
+                                        <div class="sim-licenc-cron-barra-fill" id="transf-cron-barra"></div>
+                                    </div>
+                                    <div class="sim-licenc-cron-legenda">
+                                        <span>Data da compra</span>
+                                        <span id="transf-cron-fim">Vencimento do prazo</span>
+                                    </div>
+                                </div>
+                                <div class="sim-pron-alerta" id="transf-alerta-prazo" style="display:none">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                         stroke-width="1.5" id="transf-alerta-prazo-icon" aria-hidden="true">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71
+                                                 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01" stroke-linecap="round"/>
+                                    </svg>
+                                    <div id="transf-alerta-prazo-txt"></div>
                                 </div>
                                 <div class="sim-pron-alerta"
                                     style="display:flex;background:#0d1829;border:1px solid #1e3a5f">
@@ -767,7 +798,7 @@
                                         constitui proposta comercial nem garantia de valor final.</span>
                                 </div>
                                 <a class="sim-pron-cta" id="transf-cta" href="#" target="_blank" rel="noopener"
-                                    aria-label="Solicitar orçamento de transferência">
+                                    aria-label="Transferir veículo pelo WhatsApp">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
                                         aria-hidden="true">
                                         <path

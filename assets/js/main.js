@@ -414,6 +414,8 @@ async function carregarCTB() {
   if (!btn) return;
 
   var WA_NUM = '5521995462016';
+  var MULTA_ATRASO_TRANSF = 130.16;
+  var PRAZO_DIAS = 30;
 
   function fmt(v) {
     return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -425,6 +427,7 @@ async function carregarCTB() {
     var origem   = document.getElementById('transf-origem').value;
     var destino  = document.getElementById('transf-destino').value;
     var ano      = document.getElementById('transf-ano').value;
+    var dataCompraRaw = document.getElementById('transf-data-compra').value;
 
     if (valorRaw <= 0) {
       document.getElementById('transf-valor').focus();
@@ -453,8 +456,76 @@ async function carregarCTB() {
     var res = document.getElementById('transf-resultado');
     res.style.display = 'block';
 
-    var msg = 'Olá! Fiz a simulação de transferência no site.\nValor do veículo: ' + fmt(valorRaw) + '\nCusto total estimado: ' + fmt(total) + '\nGostaria de um orçamento exato.';
-    document.getElementById('transf-cta').href = 'https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msg);
+    if (dataCompraRaw) {
+        var dataCompra = new Date(dataCompraRaw + 'T00:00:00');
+        var hoje = new Date();
+        hoje.setHours(0,0,0,0);
+        var vencPrazo = new Date(dataCompra);
+        vencPrazo.setDate(vencPrazo.getDate() + PRAZO_DIAS);
+        var diffMs = vencPrazo - hoje;
+        var diasRestantes = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+        var diasEl = document.getElementById('transf-dias-prazo');
+        var multaEl = document.getElementById('transf-multa-atraso');
+        var cronEl  = document.getElementById('transf-cronometro');
+        var cronBarra = document.getElementById('transf-cron-barra');
+        var cronLabel = document.getElementById('transf-cron-label');
+        var cronFim   = document.getElementById('transf-cron-fim');
+        var alertaPrazo    = document.getElementById('transf-alerta-prazo');
+        var alertaPrazoTxt = document.getElementById('transf-alerta-prazo-txt');
+        var alertaPrazoIcon = document.getElementById('transf-alerta-prazo-icon');
+
+        var nomesMes = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+        var vencStr = nomesMes[vencPrazo.getMonth()] + ' / ' + vencPrazo.getFullYear();
+
+        diasEl.textContent = diasRestantes > 0 ? diasRestantes + ' dias' : 'VENCIDO';
+        diasEl.style.color = diasRestantes > 10 ? '#22c55e' : diasRestantes > 0 ? '#F5A623' : '#ef4444';
+        multaEl.textContent = diasRestantes <= 0 ? 'R$ 130,16 + 4 pts na CNH' : '—';
+        multaEl.style.color = diasRestantes <= 0 ? '#ef4444' : '#94a3b8';
+
+        cronEl.style.display = 'block';
+        cronFim.textContent = vencStr;
+
+        var pct = diasRestantes > 0 ? Math.max(5, Math.min(100, (diasRestantes / PRAZO_DIAS) * 100)) : 0;
+        cronBarra.style.width = pct + '%';
+        cronBarra.style.background = diasRestantes > 10 ? '#22c55e' : diasRestantes > 0 ? '#F5A623' : '#ef4444';
+
+        if (diasRestantes <= 0) {
+            cronLabel.textContent = 'Prazo vencido — transferência em atraso';
+            alertaPrazo.style.display = 'flex';
+            alertaPrazo.style.background = '#2a0a0a';
+            alertaPrazo.style.color = '#ef4444';
+            alertaPrazoIcon.style.color = '#ef4444';
+            alertaPrazoTxt.innerHTML = '<strong>Prazo encerrado.</strong> Você está sujeito a multa de R$ 130,16 e 4 pontos na CNH. Regularize agora para evitar bloqueio do documento.';
+        } else if (diasRestantes <= 5) {
+            cronLabel.textContent = 'Urgente — faltam ' + diasRestantes + ' dia(s)';
+            alertaPrazo.style.display = 'flex';
+            alertaPrazo.style.background = '#2a0a0a';
+            alertaPrazo.style.color = '#ef4444';
+            alertaPrazoIcon.style.color = '#ef4444';
+            alertaPrazoTxt.innerHTML = '<strong>Prazo crítico.</strong> Faltam apenas ' + diasRestantes + ' dia(s). Qualquer atraso gera multa de R$ 130,16 + 4 pontos na CNH.';
+        } else if (diasRestantes <= 10) {
+            cronLabel.textContent = 'Atenção — faltam ' + diasRestantes + ' dias';
+            alertaPrazo.style.display = 'flex';
+            alertaPrazo.style.background = '#2a1a00';
+            alertaPrazo.style.color = '#F5A623';
+            alertaPrazoIcon.style.color = '#F5A623';
+            alertaPrazoTxt.innerHTML = '<strong>Prazo curto.</strong> Faltam ' + diasRestantes + ' dias para o vencimento. Inicie o processo agora para evitar multa.';
+        } else {
+            cronLabel.textContent = 'Faltam ' + diasRestantes + ' dias para o prazo';
+            alertaPrazo.style.display = 'none';
+        }
+
+        var msgAtual = 'Olá! Fiz a simulação de transferência no site.\nValor do veículo: ' + fmt(valorRaw) + '\nCusto total estimado: ' + fmt(total) + '\nDias restantes para transferir: ' + (diasRestantes > 0 ? diasRestantes : 'VENCIDO') + '\nGostaria de um orçamento exato.';
+        document.getElementById('transf-cta').href = 'https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msgAtual);
+    } else {
+        document.getElementById('transf-cronometro').style.display = 'none';
+        document.getElementById('transf-alerta-prazo').style.display = 'none';
+        document.getElementById('transf-dias-prazo').textContent = '—';
+        document.getElementById('transf-multa-atraso').textContent = '—';
+        var msg = 'Olá! Fiz a simulação de transferência no site.\nValor do veículo: ' + fmt(valorRaw) + '\nCusto total estimado: ' + fmt(total) + '\nGostaria de um orçamento exato.';
+        document.getElementById('transf-cta').href = 'https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msg);
+    }
   });
 })();
 
