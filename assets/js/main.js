@@ -227,138 +227,450 @@
 // SIMULADOR DE PONTOS NA CNH
 // =============================================
 (function () {
-  const PONTOS  = { leve: 3, media: 4, grave: 5, gravissima: 7 };
-  const VALORES = { leve: 88.38, media: 130.16, grave: 195.23, gravissima: 293.47 };
-  const WA_NUM  = '5521995462016';
+  const PONTOS  = { leve:3, media:4, grave:5, gravissima:7 };
+  const VALORES = { leve:88.38, media:130.16, grave:195.23, gravissima:293.47 };
+  const TIPOS   = { leve:'Leve', media:'Média', grave:'Grave', gravissima:'Gravíssima' };
+  const CORES_INFRA = {
+    leve:     { bg:'#0f2a1a', color:'#22c55e' },
+    media:    { bg:'#2a1a00', color:'#F5A623' },
+    grave:    { bg:'#2a0a0a', color:'#ef4444' },
+    gravissima:{ bg:'#3a0000', color:'#ff6b6b' },
+  };
+  const WA_NUM = '5521995462016';
+  const counts = { leve:0, media:0, grave:0, gravissima:0 };
 
-  const counts = { leve: 0, media: 0, grave: 0, gravissima: 0 };
+  function $(id){ return document.getElementById(id); }
 
-  function $(id) { return document.getElementById(id); }
+  function calcular(){
+    const total     = Object.keys(counts).reduce((s,k)=>s+counts[k]*PONTOS[k],0);
+    const totalM    = Object.values(counts).reduce((s,v)=>s+v,0);
+    const valor     = Object.keys(counts).reduce((s,k)=>s+counts[k]*VALORES[k],0);
+    const recorriveis = Math.ceil(totalM*0.7);
+    const ptsRecurso  = Math.round(Object.keys(counts).reduce((s,k)=>s+Math.ceil(counts[k]*0.7)*PONTOS[k],0));
+    const posRecurso  = Math.max(0, total-ptsRecurso);
+    const pct         = Math.min(100, Math.round(total/20*100));
+    const faltam      = Math.max(0, 20-total);
 
-  function calcular() {
-    const total       = Object.keys(counts).reduce((s, k) => s + counts[k] * PONTOS[k], 0);
-    const totalMultas = Object.values(counts).reduce((s, v) => s + v, 0);
-    const valor       = Object.keys(counts).reduce((s, k) => s + counts[k] * VALORES[k], 0);
-    const recorriveis = Math.ceil(totalMultas * 0.7);
-    const ptsRecurso  = Math.round(Object.keys(counts).reduce((s, k) => s + Math.ceil(counts[k] * 0.7) * PONTOS[k], 0));
-    const posRecurso  = Math.max(0, total - ptsRecurso);
-    const pct         = Math.min(100, Math.round((total / 20) * 100));
-    const faltam      = Math.max(0, 20 - total);
+    const ptsEl = $('sim-pron-pts');
+    ptsEl.textContent = total;
+    ptsEl.style.color = total===0?'#22c55e':total<10?'#F5A623':'#ef4444';
 
-    $('sim-total-pts').textContent   = total;
-    $('sim-recorriveis').textContent = recorriveis;
-    $('sim-pts-recurso').textContent = ptsRecurso;
-    $('sim-valor-total').textContent = valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    $('sim-pron-recorriveis').textContent = recorriveis;
+    $('sim-pron-valor').textContent       = valor.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+    const posEl = $('sim-pron-pos');
+    posEl.textContent = posRecurso+' pts';
+    posEl.style.color = posRecurso<15?'#22c55e':posRecurso<20?'#F5A623':'#ef4444';
 
-    const posEl = $('sim-pos-recurso');
-    posEl.textContent = posRecurso + ' pts';
-    posEl.className   = 'sim-stat-val ' + (posRecurso < 15 ? 'sim-green' : posRecurso < 20 ? 'sim-amber' : 'sim-red');
+    const barra = $('sim-pron-barra');
+    barra.style.width      = pct+'%';
+    barra.style.background = pct<50?'#22c55e':pct<80?'#F5A623':'#ef4444';
+    $('sim-pron-faltam').textContent = total===0
+      ?'Sem pontos registrados'
+      :faltam>0?`Faltam ${faltam} pts para suspensão`:'⚠ Limite atingido';
 
-    const barra = $('sim-barra');
-    barra.style.width      = pct + '%';
-    barra.style.background = pct < 50 ? '#22c55e' : pct < 80 ? '#F5A623' : '#ef4444';
+    const badge = $('sim-pron-badge');
+    const badgeMap = [
+      [0,   'Regular',  '#0f2a1a','#22c55e'],
+      [9,   'Atenção',  '#2a1a00','#F5A623'],
+      [19,  'Risco',    '#2a0a0a','#ef4444'],
+      [Infinity,'Suspenso','#3a0000','#ff6b6b'],
+    ];
+    const bs = badgeMap.find(([lim])=>total<=lim)||badgeMap[badgeMap.length-1];
+    badge.textContent       = bs[1];
+    badge.style.background  = bs[2];
+    badge.style.color       = bs[3];
 
-    const barraAria = $('sim-barra-aria');
-    if (barraAria) barraAria.setAttribute('aria-valuenow', Math.min(total, 20));
-
-    $('sim-faltam').textContent = total === 0
-      ? 'Adicione multas para ver sua situação'
-      : faltam > 0
-        ? 'Faltam ' + faltam + ' ponto(s) para a suspensão'
-        : 'Limite atingido — suspensão iminente';
-
-    const statusEl = $('sim-status');
-    const ctaEl    = $('sim-cta');
-    let ctaTitulo  = '';
-    let ctaSub     = '';
-    let statusHTML = '';
-    let msgWA      = '';
-
-    if (total === 0) {
-      statusHTML = `<div class="sim-status-card sim-status--ok">
-        <span class="sim-status-icon" style="color:#22c55e" aria-hidden="true">✓</span>
-        <div>
-          <div class="sim-status-titulo" style="color:#22c55e">CNH regularizada</div>
-          <div class="sim-status-desc" style="color:#86efac">Nenhuma infração registrada. Sua carteira está em dia.</div>
-        </div>
-      </div>`;
-      ctaEl.classList.remove('sim-cta--visible');
-    } else if (total < 10) {
-      statusHTML = `<div class="sim-status-card sim-status--ok">
-        <span class="sim-status-icon" style="color:#22c55e" aria-hidden="true">⚠</span>
-        <div>
-          <div class="sim-status-titulo" style="color:#22c55e">Situação tranquila por enquanto</div>
-          <div class="sim-status-desc" style="color:#86efac">Você tem ${total} pontos. Ainda está distante do limite, mas vale recorrer agora enquanto há tempo.</div>
-        </div>
-      </div>`;
-      ctaTitulo = 'Recorra agora antes que piore';
-      ctaSub    = `Com ${recorriveis} multa(s) com chance de recurso, posso reduzir sua pontuação para ${posRecurso} pontos. Análise gratuita.`;
-      msgWA     = `Olá! Fiz a simulação no site e tenho ${total} pontos na CNH. Gostaria de analisar o recurso das multas.`;
-    } else if (total < 20) {
-      statusHTML = `<div class="sim-status-card sim-status--aviso">
-        <span class="sim-status-icon" style="color:#F5A623" aria-hidden="true">!</span>
-        <div>
-          <div class="sim-status-titulo" style="color:#F5A623">Atenção — zona de risco</div>
-          <div class="sim-status-desc" style="color:#FCD34D">Você está com ${total} pontos. Faltam apenas ${faltam} ponto(s) para a suspensão. Qualquer nova infração pode ser fatal.</div>
-        </div>
-      </div>`;
-      ctaTitulo = 'Situação crítica — aja agora';
-      ctaSub    = `Posso analisar ${recorriveis} multa(s) com chance real de recurso e reduzir sua pontuação para ${posRecurso} pontos. Não espere mais.`;
-      msgWA     = `Olá! Fiz a simulação no site e tenho ${total} pontos na CNH — zona de risco! Preciso urgente de ajuda com recurso de multas.`;
+    const infraWrap  = $('sim-pron-infra-wrap');
+    const infraLista = $('sim-pron-infra-lista');
+    if(totalM>0){
+      infraWrap.style.display='block';
+      infraLista.innerHTML = Object.keys(counts)
+        .filter(k=>counts[k]>0)
+        .map(k=>`
+          <div class="sim-pron-infra-item">
+            <span class="sim-pron-infra-tipo">${TIPOS[k]}</span>
+            <div class="sim-pron-infra-right">
+              <span class="sim-pron-infra-qtd">${counts[k]}x</span>
+              <span class="sim-pron-infra-pts"
+                style="background:${CORES_INFRA[k].bg};color:${CORES_INFRA[k].color}">
+                ${counts[k]*PONTOS[k]} pts
+              </span>
+            </div>
+          </div>`).join('');
     } else {
-      statusHTML = `<div class="sim-status-card sim-status--risco">
-        <span class="sim-status-icon" style="color:#ef4444" aria-hidden="true">✕</span>
-        <div>
-          <div class="sim-status-titulo" style="color:#ef4444">CNH em risco de suspensão</div>
-          <div class="sim-status-desc" style="color:#fca5a5">Você atingiu ${total} pontos — acima do limite legal de 20 pts. O DETRAN pode notificar a suspensão a qualquer momento.</div>
-        </div>
-      </div>`;
-      ctaTitulo = 'Suspensão iminente — recurso urgente';
-      ctaSub    = `Com ${recorriveis} multa(s) recorríveis posso reduzir sua pontuação para ${posRecurso} pontos e evitar a suspensão. Me chama agora.`;
-      msgWA     = `URGENTE! Fiz a simulação no site e tenho ${total} pontos na CNH. Preciso de recurso urgente para evitar suspensão!`;
+      infraWrap.style.display='none';
     }
 
-    statusEl.innerHTML = statusHTML;
+    const alertaEl  = $('sim-pron-alerta');
+    const alertaTxt = $('sim-pron-alerta-txt');
+    const alertaIcon= $('sim-pron-alerta-icon');
+    const ctaEl     = $('sim-pron-cta');
 
-    if (total > 0) {
-      $('sim-cta-titulo').textContent = ctaTitulo;
-      $('sim-cta-sub').textContent    = ctaSub;
-      $('sim-cta-btn').href           = `https://wa.me/${WA_NUM}?text=${encodeURIComponent(msgWA)}`;
-      ctaEl.classList.add('sim-cta--visible');
+    if(total===0){
+      alertaEl.style.display='none';
+      ctaEl.style.display='none';
+    } else {
+      alertaEl.style.display='flex';
+      ctaEl.style.display='inline-flex';
+      if(total<10){
+        alertaEl.style.background='#0f2a1a';
+        alertaEl.style.color='#22c55e';
+        alertaIcon.style.color='#22c55e';
+        alertaTxt.innerHTML=`<strong>CNH dentro do limite.</strong> Ainda há margem, mas vale recorrer agora enquanto há tempo.`;
+      } else if(total<20){
+        alertaEl.style.background='#2a1a00';
+        alertaEl.style.color='#F5A623';
+        alertaIcon.style.color='#F5A623';
+        alertaTxt.innerHTML=`<strong>Zona de risco.</strong> Faltam apenas ${faltam} ponto(s) para a suspensão. Qualquer nova infração pode ser decisiva.`;
+      } else {
+        alertaEl.style.background='#2a0a0a';
+        alertaEl.style.color='#ef4444';
+        alertaIcon.style.color='#ef4444';
+        alertaTxt.innerHTML=`<strong>Suspensão iminente.</strong> Você ultrapassou o limite legal. O DETRAN pode notificar a qualquer momento.`;
+      }
+      const msg = `Olá! Fiz a simulação no site e tenho ${total} pontos na CNH. Gostaria de analisar meu caso.`;
+      ctaEl.href = `https://wa.me/${WA_NUM}?text=${encodeURIComponent(msg)}`;
     }
+
+    Object.keys(counts).forEach(k=>{
+      const card = document.getElementById('sim-card-'+k);
+      if(card) card.classList.toggle('sim-mc--ativo', counts[k]>0);
+    });
   }
 
-  function iniciar() {
+  function iniciar(){
     const section = document.getElementById('simulador');
-    if (!section) return;
+    if(!section) return;
 
-    section.querySelectorAll('.sim-btn-cnt').forEach(btn => {
-      btn.addEventListener('click', () => {
+    section.querySelectorAll('.sim-mc-btn').forEach(btn=>{
+      btn.addEventListener('click',()=>{
         const tipo  = btn.dataset.tipo;
-        const delta = parseInt(btn.dataset.delta, 10);
-        counts[tipo] = Math.max(0, counts[tipo] + delta);
-        document.getElementById('sim-v-' + tipo).textContent = counts[tipo];
+        const delta = parseInt(btn.dataset.delta,10);
+        counts[tipo] = Math.max(0, counts[tipo]+delta);
+        document.getElementById('sim-v-'+tipo).textContent = counts[tipo];
         calcular();
       });
     });
 
-    const resetBtn = document.getElementById('sim-reset');
-    if (resetBtn) {
-      resetBtn.addEventListener('click', () => {
-        Object.keys(counts).forEach(k => {
-          counts[k] = 0;
-          document.getElementById('sim-v-' + k).textContent = '0';
-        });
-        calcular();
-      });
-    }
-
     calcular();
   }
 
-  if (document.readyState === 'loading') {
+  if(document.readyState==='loading'){
     document.addEventListener('DOMContentLoaded', iniciar);
   } else {
     iniciar();
   }
+})();
+
+// =============================================
+// TAB SWITCHING — Central de Simuladores
+// =============================================
+(function initTabs() {
+  var tabs = document.querySelectorAll('.sim-tab');
+  var paineis = document.querySelectorAll('.sim-painel');
+  if (!tabs.length || !paineis.length) return;
+
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var alvo = tab.getAttribute('aria-controls');
+
+      tabs.forEach(function (t) {
+        t.classList.remove('sim-tab--ativo');
+        t.setAttribute('aria-selected', 'false');
+      });
+      tab.classList.add('sim-tab--ativo');
+      tab.setAttribute('aria-selected', 'true');
+
+      paineis.forEach(function (p) {
+        if (p.id === alvo) {
+          p.removeAttribute('hidden');
+          p.classList.add('sim-painel--ativo');
+        } else {
+          p.setAttribute('hidden', '');
+          p.classList.remove('sim-painel--ativo');
+        }
+      });
+
+      var secao = document.getElementById('simulador');
+      if (secao) secao.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+})();
+
+// =============================================
+// SIMULADOR DE CUSTO DE TRANSFERÊNCIA
+// =============================================
+(function initTransferencia() {
+  var btn = document.getElementById('transf-calcular');
+  if (!btn) return;
+
+  var WA_NUM = '5521995462016';
+
+  var ITCMD_RJ = 0.04;
+  var TAXA_DETRA_BASE = 173.64;
+  var VISTORIA_RJ = 169.98;
+  var HONORARIOS = 450;
+
+  function fmt(v) {
+    return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+  btn.addEventListener('click', function () {
+    var valorRaw = parseFloat(document.getElementById('transf-valor').value) || 0;
+    var origem   = document.getElementById('transf-origem').value;
+    var destino  = document.getElementById('transf-destino').value;
+    var ano      = document.getElementById('transf-ano').value;
+
+    if (valorRaw <= 0) {
+      document.getElementById('transf-valor').focus();
+      return;
+    }
+
+    var valorITCMD = valorRaw * ITCMD_RJ;
+    var multaAtraso = 0;
+    if (ano === 'antigo') multaAtraso = 52.82;
+    else if (ano === 'medio') multaAtraso = 0;
+
+    var taxaDetran = TAXA_DETRA_BASE + multaAtraso;
+    var vistoria = VISTORIA_RJ;
+    var honorarios = HONORARIOS;
+    var total = valorITCMD + taxaDetran + vistoria + honorarios;
+
+    var prazo = '5 a 10 dias úteis';
+    if (origem !== 'RJ' || destino !== 'RJ') prazo = '10 a 15 dias úteis';
+
+    document.getElementById('transf-taxa-detran').textContent = fmt(valorITCMD) + ' + ' + fmt(taxaDetran);
+    document.getElementById('transf-vistoria').textContent = fmt(vistoria);
+    document.getElementById('transf-honorarios').textContent = fmt(honorarios);
+    document.getElementById('transf-total').textContent = fmt(total);
+    document.getElementById('transf-prazo').textContent = prazo;
+
+    var res = document.getElementById('transf-resultado');
+    res.style.display = 'block';
+
+    var msg = 'Olá! Fiz a simulação de transferência no site.\nValor do veículo: ' + fmt(valorRaw) + '\nCusto total estimado: ' + fmt(total) + '\nGostaria de um orçamento exato.';
+    document.getElementById('transf-cta').href = 'https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msg);
+  });
+})();
+
+// =============================================
+// SIMULADOR DE SITUAÇÃO DO VEÍCULO
+// =============================================
+(function initVeiculo() {
+  var btn = document.getElementById('veiculo-consultar');
+  var placaInput = document.getElementById('veiculo-placa');
+  if (!btn || !placaInput) return;
+
+  var WA_NUM = '5521995462016';
+
+  var CHECKLIST_ITEMS = [
+    { label: 'Licenciamento (CRLV)', key: 'licenciamento' },
+    { label: 'IPVA — ' + (new Date().getFullYear() - 1), key: 'ipva' },
+    { label: 'DPVAT', key: 'dpvat' },
+    { label: 'Multas de trânsito', key: 'multas' },
+    { label: 'Restrição judicial', key: 'restricao' },
+    { label: 'Alarme anti-furto', key: 'alarme' },
+  ];
+
+  function seededRandom(seed) {
+    var x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+  }
+
+  function gerarChecklist(placa) {
+    var seed = 0;
+    for (var i = 0; i < placa.length; i++) seed += placa.charCodeAt(i) * (i + 1);
+    var items = [];
+    var temProblema = false;
+    CHECKLIST_ITEMS.forEach(function (item, idx) {
+      var r = seededRandom(seed + idx * 7);
+      var ok;
+      if (item.key === 'alarme') {
+        ok = r > 0.4;
+      } else if (item.key === 'restricao') {
+        ok = r > 0.15;
+      } else {
+        ok = r > 0.25;
+      }
+      items.push({ label: item.label, ok: ok });
+      if (!ok) temProblema = true;
+    });
+    return { items: items, temProblema: temProblema };
+  }
+
+  btn.addEventListener('click', function () {
+    var placa = placaInput.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+    if (placa.length < 5) {
+      placaInput.focus();
+      return;
+    }
+
+    var display = document.getElementById('veiculo-placa-display');
+    var formatted = placa.length === 7
+      ? placa.slice(0, 3) + '-' + placa.slice(3)
+      : placa;
+    display.textContent = formatted;
+
+    var resultado = gerarChecklist(placa);
+    var checklistEl = document.getElementById('veiculo-checklist');
+    checklistEl.innerHTML = resultado.items.map(function (item) {
+      var iconClass = item.ok ? 'sim-check-icon sim-check-icon--ok' : 'sim-check-icon sim-check-icon--pendente';
+      var symbol = item.ok ? '&#10003;' : '&#10007;';
+      return '<div class="sim-check-item"><span class="' + iconClass + '">' + symbol + '</span><span>' + item.label + '</span></div>';
+    }).join('');
+
+    var badge = document.getElementById('veiculo-badge');
+    if (resultado.temProblema) {
+      badge.textContent = 'Pendências';
+      badge.style.background = '#2a0a0a';
+      badge.style.color = '#ef4444';
+    } else {
+      badge.textContent = 'Regular';
+      badge.style.background = '#0f2a1a';
+      badge.style.color = '#22c55e';
+    }
+
+    var alertaEl = document.getElementById('veiculo-alerta');
+    var alertaTxt = document.getElementById('veiculo-alerta-txt');
+    if (resultado.temProblema) {
+      alertaEl.style.display = 'flex';
+      alertaEl.style.background = '#2a0a0a';
+      alertaEl.style.color = '#ef4444';
+      alertaTxt.innerHTML = '<strong>Veículo com pendências.</strong> O veículo possui débitos ou restrições que precisam ser regularizados antes de transferir ou licenciar.';
+    } else {
+      alertaEl.style.display = 'flex';
+      alertaEl.style.background = '#0f2a1a';
+      alertaEl.style.color = '#22c55e';
+      alertaTxt.innerHTML = '<strong>Veículo regularizado.</strong> Nenhuma pendência encontrada na simulação. Confira o DETRAN para dados oficiais.';
+    }
+
+    document.getElementById('veiculo-resultado').style.display = 'block';
+
+    var msg = 'Olá! Consultei a situação do veículo ' + formatted + ' no site.\nGostaria de uma verificação oficial e orçamento.';
+    document.getElementById('veiculo-cta').href = 'https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msg);
+  });
+
+  placaInput.addEventListener('input', function () {
+    var v = placaInput.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+    if (v.length > 3) v = v.slice(0, 3) + '-' + v.slice(3, 7);
+    placaInput.value = v;
+  });
+})();
+
+// =============================================
+// SIMULADOR DE VENCIMENTO DO LICENCIAMENTO
+// =============================================
+(function initLicenciamento() {
+  var btn = document.getElementById('licenc-calcular');
+  if (!btn) return;
+
+  var WA_NUM = '5521995462016';
+  var MULTA_ATRASO = 293.47;
+  var IPVA_TAXA = 0.04;
+
+  function fmt(v) {
+    return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+  function diasNoMes(ano, mes) {
+    return new Date(ano, mes, 0).getDate();
+  }
+
+  btn.addEventListener('click', function () {
+    var mes = parseInt(document.getElementById('licenc-mes').value, 10);
+    var valorVenal = parseFloat(document.getElementById('licenc-valor').value) || 0;
+
+    if (!mes) {
+      document.getElementById('licenc-mes').focus();
+      return;
+    }
+
+    var hoje = new Date();
+    var anoAtual = hoje.getFullYear();
+    var vencimento = new Date(anoAtual, mes - 1, diasNoMes(anoAtual, mes));
+
+    if (vencimento < hoje) {
+      vencimento = new Date(anoAtual + 1, mes - 1, diasNoMes(anoAtual + 1, mes));
+    }
+
+    var diffMs = vencimento - hoje;
+    var dias = Math.max(0, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
+    var mesesRestantes = Math.max(0, (vencimento.getFullYear() - hoje.getFullYear()) * 12 + (vencimento.getMonth() - hoje.getMonth()));
+
+    var nomesMes = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+    var vencimentoStr = nomesMes[vencimento.getMonth()] + ' / ' + vencimento.getFullYear();
+
+    var taxaDetran = 173.64;
+    var multa = 0;
+    var ipvaAtraso = 0;
+    if (dias <= 0) {
+      multa = MULTA_ATRASO;
+      if (valorVenal > 0) ipvaAtraso = valorVenal * IPVA_TAXA;
+    }
+
+    var totalAtraso = taxaDetran + multa + ipvaAtraso;
+
+    document.getElementById('licenc-dias').textContent = dias > 0 ? dias + ' dias' : 'VENCIDO';
+    document.getElementById('licenc-dias').style.color = dias > 30 ? '#22c55e' : dias > 0 ? '#F5A623' : '#ef4444';
+    document.getElementById('licenc-vencimento').textContent = vencimentoStr;
+    document.getElementById('licenc-taxa').textContent = fmt(taxaDetran);
+    document.getElementById('licenc-multa').textContent = multa > 0 ? fmt(multa) + ' + juros' : '—';
+    document.getElementById('licenc-ipva').textContent = ipvaAtraso > 0 ? fmt(ipvaAtraso) : '—';
+    document.getElementById('licenc-total-atraso').textContent = fmt(totalAtraso);
+
+    var badge = document.getElementById('licenc-badge');
+    if (dias <= 0) {
+      badge.textContent = 'Vencido';
+      badge.style.background = '#3a0000';
+      badge.style.color = '#ff6b6b';
+    } else if (dias <= 30) {
+      badge.textContent = 'Urgente';
+      badge.style.background = '#2a0a0a';
+      badge.style.color = '#ef4444';
+    } else if (dias <= 90) {
+      badge.textContent = 'Atenção';
+      badge.style.background = '#2a1a00';
+      badge.style.color = '#F5A623';
+    } else {
+      badge.textContent = 'Em dia';
+      badge.style.background = '#0f2a1a';
+      badge.style.color = '#22c55e';
+    }
+
+    var barraPct = dias > 0 ? Math.max(5, Math.min(100, (dias / 365) * 100)) : 0;
+    var barra = document.getElementById('licenc-cron-barra');
+    barra.style.width = barraPct + '%';
+    barra.style.background = dias > 90 ? '#22c55e' : dias > 30 ? '#F5A623' : '#ef4444';
+    document.getElementById('licenc-cron-fim').textContent = vencimentoStr;
+
+    var labelDias = document.getElementById('licenc-cron-label');
+    if (dias <= 0) {
+      labelDias.textContent = 'Licenciamento vencido — regularize agora';
+    } else if (dias === 1) {
+      labelDias.textContent = 'Falta 1 dia para o vencimento';
+    } else {
+      labelDias.textContent = 'Faltam ' + dias + ' dias para o vencimento';
+    }
+
+    var alertaEl = document.getElementById('licenc-alerta');
+    var alertaTxt = document.getElementById('licenc-alerta-txt');
+    if (dias <= 0) {
+      alertaEl.style.display = 'flex';
+      alertaEl.style.background = '#2a0a0a';
+      alertaEl.style.color = '#ef4444';
+      alertaTxt.innerHTML = '<strong>Licenciamento vencido.</strong> Multa de R$ 293,47 + juros e IPVA proporcional. O veículo pode ser recolhido a qualquer momento.';
+    } else if (dias <= 30) {
+      alertaEl.style.display = 'flex';
+      alertaEl.style.background = '#2a1a00';
+      alertaEl.style.color = '#F5A623';
+      alertaTxt.innerHTML = '<strong>Prazo curto.</strong> Faltam apenas ' + dias + ' dias. Resolva agora para evitar multa e bloqueio do CRLV.';
+    } else {
+      alertaEl.style.display = 'none';
+    }
+
+    document.getElementById('licenc-resultado').style.display = 'block';
+
+    var msg = 'Olá! Fiz a simulação de licenciamento no site.\nVencimento: ' + vencimentoStr + '\nDias restantes: ' + dias + '\nGostaria de regularizar.';
+    document.getElementById('licenc-cta').href = 'https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msg);
+  });
 })();

@@ -360,135 +360,538 @@
         </section>
         </blueprint-shader-grid>
 
-        <!-- 🔵 SIMULADOR — Pontos na CNH (engajamento + captura lead) -->
+        <!-- 🔵 CENTRAL DE SIMULADORES VEICULARES -->
         <section id="simulador" class="simulador-section">
             <div class="simulador-container">
 
                 <div class="simulador-header">
-                    <span class="simulador-badge">simulador gratuito</span>
-                    <h2 class="simulador-titulo">Sua CNH está em <em>risco?</em></h2>
-                    <p class="simulador-sub">Informe quantas multas você levou nos últimos 12 meses
-                        e descubra sua situação real em segundos.</p>
+                    <span class="simulador-badge">central de diagnóstico gratuita</span>
+                    <h2 class="simulador-titulo">Descubra sua situação <em>agora mesmo</em></h2>
+                    <p class="simulador-sub">4 simuladores para você entender exatamente o que precisa resolver — antes mesmo de falar com a gente.</p>
                 </div>
 
-                <div class="simulador-body">
+                <!-- TABS DE NAVEGAÇÃO -->
+                <div class="sim-tabs" role="tablist" aria-label="Simuladores veiculares">
+                    <button class="sim-tab sim-tab--ativo" role="tab" aria-selected="true"
+                            aria-controls="sim-painel-cnh" id="sim-tab-cnh" data-tab="cnh">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                            <rect x="3" y="4" width="18" height="16" rx="2"/>
+                            <path d="M7 8h10M7 12h6" stroke-linecap="round"/>
+                            <circle cx="16" cy="14" r="3"/>
+                            <path d="M18.5 16.5l1.5 1.5" stroke-linecap="round"/>
+                        </svg>
+                        Pontos na CNH
+                    </button>
+                    <button class="sim-tab" role="tab" aria-selected="false"
+                            aria-controls="sim-painel-transferencia" id="sim-tab-transferencia" data-tab="transferencia">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                            <path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Custo de Transferência
+                    </button>
+                    <button class="sim-tab" role="tab" aria-selected="false"
+                            aria-controls="sim-painel-veiculo" id="sim-tab-veiculo" data-tab="veiculo">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                            <path d="M9 17H5a2 2 0 01-2-2V9l2-5h10l2 5v6a2 2 0 01-2 2h-4M9 17v2m6-2v2M3 10h18" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="7.5" cy="17" r="1.5"/>
+                            <circle cx="16.5" cy="17" r="1.5"/>
+                        </svg>
+                        Situação do Veículo
+                    </button>
+                    <button class="sim-tab" role="tab" aria-selected="false"
+                            aria-controls="sim-painel-licenciamento" id="sim-tab-licenciamento" data-tab="licenciamento">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                            <rect x="3" y="4" width="18" height="18" rx="2"/>
+                            <path d="M16 2v4M8 2v4M3 10h18" stroke-linecap="round"/>
+                            <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01" stroke-linecap="round" stroke-width="2"/>
+                        </svg>
+                        Vencimento do Licenciamento
+                    </button>
+                </div>
+
+                <!-- ==========================================
+                     PAINEL 1 — PONTOS NA CNH
+                =========================================== -->
+                <div class="sim-painel sim-painel--ativo" id="sim-painel-cnh" role="tabpanel" aria-labelledby="sim-tab-cnh">
 
                     <div class="sim-multas-grid">
 
-                        <div class="sim-multa-card">
-                            <div class="sim-multa-tipo">Leve</div>
-                            <div class="sim-multa-detalhe">3 pontos · ex: celular no semáforo parado</div>
-                            <div class="sim-multa-row">
-                                <span class="sim-multa-label">Quantidade</span>
-                                <div class="sim-count">
-                                    <button class="sim-btn-cnt" data-tipo="leve" data-delta="-1" aria-label="Diminuir multas leves">−</button>
-                                    <span class="sim-cnt-val" id="sim-v-leve">0</span>
-                                    <button class="sim-btn-cnt" data-tipo="leve" data-delta="1" aria-label="Aumentar multas leves">+</button>
+                        <div class="sim-mc" id="sim-card-leve">
+                            <div class="sim-mc-visual">
+                                <img src="assets/images/multa-leve.jpg" alt="Infração leve" class="sim-mc-img"
+                                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" loading="lazy"/>
+                                <div class="sim-mc-placeholder" aria-hidden="true">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 18h.01M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32" stroke-linecap="round"/></svg>
+                                    <span>multa-leve.jpg</span>
+                                </div>
+                            </div>
+                            <div class="sim-mc-header">
+                                <span class="sim-mc-tipo">Leve</span>
+                                <span class="sim-mc-pts sim-pts-leve">3 pts</span>
+                            </div>
+                            <p class="sim-mc-exemplo">Celular no semáforo parado, cinto de segurança</p>
+                            <div class="sim-mc-counter">
+                                <span class="sim-mc-counter-label">Quantidade</span>
+                                <div class="sim-mc-btns">
+                                    <button class="sim-mc-btn" data-tipo="leve" data-delta="-1" aria-label="Diminuir">−</button>
+                                    <span class="sim-mc-val" id="sim-v-leve">0</span>
+                                    <button class="sim-mc-btn" data-tipo="leve" data-delta="1" aria-label="Aumentar">+</button>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="sim-multa-card">
-                            <div class="sim-multa-tipo">Média</div>
-                            <div class="sim-multa-detalhe">4 pontos · ex: estacionar em local proibido</div>
-                            <div class="sim-multa-row">
-                                <span class="sim-multa-label">Quantidade</span>
-                                <div class="sim-count">
-                                    <button class="sim-btn-cnt" data-tipo="media" data-delta="-1" aria-label="Diminuir multas médias">−</button>
-                                    <span class="sim-cnt-val" id="sim-v-media">0</span>
-                                    <button class="sim-btn-cnt" data-tipo="media" data-delta="1" aria-label="Aumentar multas médias">+</button>
+                        <div class="sim-mc" id="sim-card-media">
+                            <div class="sim-mc-visual">
+                                <img src="assets/images/multa-media.jpg" alt="Infração média" class="sim-mc-img"
+                                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" loading="lazy"/>
+                                <div class="sim-mc-placeholder" aria-hidden="true">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 17H5a2 2 0 01-2-2V9l2-5h10l2 5v6a2 2 0 01-2 2h-4" stroke-linecap="round"/><circle cx="7.5" cy="17" r="2.5"/><circle cx="16.5" cy="17" r="2.5"/></svg>
+                                    <span>multa-media.jpg</span>
+                                </div>
+                            </div>
+                            <div class="sim-mc-header">
+                                <span class="sim-mc-tipo">Média</span>
+                                <span class="sim-mc-pts sim-pts-media">4 pts</span>
+                            </div>
+                            <p class="sim-mc-exemplo">Estacionar em local proibido, ultrapassar pela direita</p>
+                            <div class="sim-mc-counter">
+                                <span class="sim-mc-counter-label">Quantidade</span>
+                                <div class="sim-mc-btns">
+                                    <button class="sim-mc-btn" data-tipo="media" data-delta="-1" aria-label="Diminuir">−</button>
+                                    <span class="sim-mc-val" id="sim-v-media">0</span>
+                                    <button class="sim-mc-btn" data-tipo="media" data-delta="1" aria-label="Aumentar">+</button>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="sim-multa-card">
-                            <div class="sim-multa-tipo">Grave</div>
-                            <div class="sim-multa-detalhe">5 pontos · ex: avançar sinal vermelho</div>
-                            <div class="sim-multa-row">
-                                <span class="sim-multa-label">Quantidade</span>
-                                <div class="sim-count">
-                                    <button class="sim-btn-cnt" data-tipo="grave" data-delta="-1" aria-label="Diminuir multas graves">−</button>
-                                    <span class="sim-cnt-val" id="sim-v-grave">0</span>
-                                    <button class="sim-btn-cnt" data-tipo="grave" data-delta="1" aria-label="Aumentar multas graves">+</button>
+                        <div class="sim-mc" id="sim-card-grave">
+                            <div class="sim-mc-visual">
+                                <img src="assets/images/multa-grave.jpg" alt="Infração grave" class="sim-mc-img"
+                                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" loading="lazy"/>
+                                <div class="sim-mc-placeholder" aria-hidden="true">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01" stroke-linecap="round"/></svg>
+                                    <span>multa-grave.jpg</span>
+                                </div>
+                            </div>
+                            <div class="sim-mc-header">
+                                <span class="sim-mc-tipo">Grave</span>
+                                <span class="sim-mc-pts sim-pts-grave">5 pts</span>
+                            </div>
+                            <p class="sim-mc-exemplo">Avançar sinal vermelho, velocidade 20–50% acima</p>
+                            <div class="sim-mc-counter">
+                                <span class="sim-mc-counter-label">Quantidade</span>
+                                <div class="sim-mc-btns">
+                                    <button class="sim-mc-btn" data-tipo="grave" data-delta="-1" aria-label="Diminuir">−</button>
+                                    <span class="sim-mc-val" id="sim-v-grave">0</span>
+                                    <button class="sim-mc-btn" data-tipo="grave" data-delta="1" aria-label="Aumentar">+</button>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="sim-multa-card">
-                            <div class="sim-multa-tipo">Gravíssima</div>
-                            <div class="sim-multa-detalhe">7–10 pts · ex: embriaguez ao volante</div>
-                            <div class="sim-multa-row">
-                                <span class="sim-multa-label">Quantidade</span>
-                                <div class="sim-count">
-                                    <button class="sim-btn-cnt" data-tipo="gravissima" data-delta="-1" aria-label="Diminuir multas gravíssimas">−</button>
-                                    <span class="sim-cnt-val" id="sim-v-gravissima">0</span>
-                                    <button class="sim-btn-cnt" data-tipo="gravissima" data-delta="1" aria-label="Aumentar multas gravíssimas">+</button>
+                        <div class="sim-mc" id="sim-card-gravissima">
+                            <div class="sim-mc-visual">
+                                <img src="assets/images/multa-gravissima.jpg" alt="Infração gravíssima" class="sim-mc-img"
+                                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" loading="lazy"/>
+                                <div class="sim-mc-placeholder" aria-hidden="true">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><path d="M12 9v4M12 17h.01" stroke-linecap="round"/></svg>
+                                    <span>multa-gravissima.jpg</span>
+                                </div>
+                            </div>
+                            <div class="sim-mc-header">
+                                <span class="sim-mc-tipo">Gravíssima</span>
+                                <span class="sim-mc-pts sim-pts-gravissima">7–10 pts</span>
+                            </div>
+                            <p class="sim-mc-exemplo">Embriaguez, velocidade 50%+ acima, racha</p>
+                            <div class="sim-mc-counter">
+                                <span class="sim-mc-counter-label">Quantidade</span>
+                                <div class="sim-mc-btns">
+                                    <button class="sim-mc-btn" data-tipo="gravissima" data-delta="-1" aria-label="Diminuir">−</button>
+                                    <span class="sim-mc-val" id="sim-v-gravissima">0</span>
+                                    <button class="sim-mc-btn" data-tipo="gravissima" data-delta="1" aria-label="Aumentar">+</button>
                                 </div>
                             </div>
                         </div>
 
                     </div>
 
-                    <div class="sim-resultado">
-
-                        <div class="sim-res-topo">
-                            <div class="sim-pontos-display">
-                                <span class="sim-pontos-num" id="sim-total-pts">0</span>
-                                <span class="sim-pontos-label">pontos acumulados</span>
+                    <div class="sim-prontuario">
+                        <div class="sim-pron-header">
+                            <div class="sim-pron-header-left">
+                                <div class="sim-pron-brasao">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                        <path d="M9 12h6M9 16h6M9 8h6M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z" stroke-linecap="round"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="sim-pron-orgao">DETRAN · Prontuário Digital</div>
+                                    <div class="sim-pron-nome-doc">Consulta de Pontuação — CNH</div>
+                                </div>
                             </div>
-                            <div class="sim-barra-wrap">
-                                <div class="sim-barra-labels">
+                            <span class="sim-pron-badge" id="sim-pron-badge">Regular</span>
+                        </div>
+                        <div class="sim-pron-body">
+                            <div class="sim-pron-grid">
+                                <div class="sim-pron-campo">
+                                    <div class="sim-pron-campo-label">Pontos acumulados</div>
+                                    <div class="sim-pron-campo-val sim-pron-grande" id="sim-pron-pts">0</div>
+                                </div>
+                                <div class="sim-pron-campo">
+                                    <div class="sim-pron-campo-label">Limite legal</div>
+                                    <div class="sim-pron-campo-val sim-pron-grande" style="color:#94a3b8">20</div>
+                                </div>
+                                <div class="sim-pron-campo">
+                                    <div class="sim-pron-campo-label">Validade CNH</div>
+                                    <div class="sim-pron-campo-val">Jun / 2029</div>
+                                </div>
+                                <div class="sim-pron-campo">
+                                    <div class="sim-pron-campo-label">Multas recorríveis</div>
+                                    <div class="sim-pron-campo-val sim-pron-grande" id="sim-pron-recorriveis" style="color:#F5A623">0</div>
+                                </div>
+                                <div class="sim-pron-campo">
+                                    <div class="sim-pron-campo-label">Valor estimado</div>
+                                    <div class="sim-pron-campo-val" id="sim-pron-valor">R$ 0,00</div>
+                                </div>
+                                <div class="sim-pron-campo">
+                                    <div class="sim-pron-campo-label">Após recurso</div>
+                                    <div class="sim-pron-campo-val sim-pron-grande" id="sim-pron-pos" style="color:#22c55e">0 pts</div>
+                                </div>
+                            </div>
+                            <div class="sim-pron-barra-wrap">
+                                <div class="sim-pron-barra-labels">
                                     <span>0 pts</span>
-                                    <span>limite: 20 pts</span>
+                                    <span id="sim-pron-faltam">Sem pontos registrados</span>
                                 </div>
-                                <div class="sim-barra-bg" role="progressbar" aria-valuemin="0" aria-valuemax="20" aria-valuenow="0" id="sim-barra-aria">
-                                    <div class="sim-barra-fill" id="sim-barra"></div>
+                                <div class="sim-pron-barra-bg">
+                                    <div class="sim-pron-barra-fill" id="sim-pron-barra"></div>
                                 </div>
-                                <p class="sim-faltam" id="sim-faltam">Adicione multas para ver sua situação</p>
                             </div>
-                            <button class="sim-reset" id="sim-reset" aria-label="Reiniciar simulação">Reiniciar</button>
-                        </div>
-
-                        <div class="sim-status" id="sim-status"></div>
-
-                        <div class="sim-stats-grid">
-                            <div class="sim-stat-card">
-                                <span class="sim-stat-label">Multas recorríveis</span>
-                                <span class="sim-stat-val" id="sim-recorriveis">0</span>
+                            <div class="sim-pron-infra-wrap" id="sim-pron-infra-wrap" style="display:none">
+                                <div class="sim-pron-infra-titulo">Infrações registradas no período</div>
+                                <div id="sim-pron-infra-lista"></div>
                             </div>
-                            <div class="sim-stat-card">
-                                <span class="sim-stat-label">Pontos que posso retirar</span>
-                                <span class="sim-stat-val sim-green" id="sim-pts-recurso">0</span>
-                            </div>
-                            <div class="sim-stat-card">
-                                <span class="sim-stat-label">Valor estimado das multas</span>
-                                <span class="sim-stat-val sim-amber" id="sim-valor-total">R$ 0,00</span>
-                            </div>
-                            <div class="sim-stat-card">
-                                <span class="sim-stat-label">Situação após recurso</span>
-                                <span class="sim-stat-val" id="sim-pos-recurso">0 pts</span>
-                            </div>
-                        </div>
-
-                        <div class="sim-cta" id="sim-cta" aria-live="polite">
-                            <p class="sim-cta-titulo" id="sim-cta-titulo"></p>
-                            <p class="sim-cta-sub" id="sim-cta-sub"></p>
-                            <a class="sim-cta-btn"
-                               id="sim-cta-btn"
-                               href="#"
-                               target="_blank"
-                               rel="noopener"
-                               aria-label="Falar com o despachante no WhatsApp">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                            <div class="sim-pron-alerta" id="sim-pron-alerta" style="display:none">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" id="sim-pron-alerta-icon" aria-hidden="true">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01" stroke-linecap="round"/>
                                 </svg>
-                                Falar com o despachante agora
+                                <div id="sim-pron-alerta-txt"></div>
+                            </div>
+                        </div>
+                        <div class="sim-pron-footer">
+                            <div class="sim-pron-footer-info">
+                                Simulação com base no CTB · Pontos válidos por 12 meses<br>
+                                <span class="sim-pron-footer-aviso">Documento ilustrativo · Consulte o DETRAN para dados oficiais</span>
+                            </div>
+                            <a class="sim-pron-cta" id="sim-pron-cta" href="#" target="_blank" rel="noopener" style="display:none" aria-label="Falar com despachante no WhatsApp">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                                Falar com o despachante
                             </a>
-                            <p class="sim-cta-hint">Resposta em até 1h · Análise gratuita e sem compromisso</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ==========================================
+                     PAINEL 2 — CUSTO DE TRANSFERÊNCIA
+                =========================================== -->
+                <div class="sim-painel" id="sim-painel-transferencia" role="tabpanel" aria-labelledby="sim-tab-transferencia" hidden>
+
+                    <div class="sim-transf-grid">
+
+                        <div class="sim-transf-inputs">
+                            <div class="sim-campo-grupo">
+                                <label class="sim-campo-label" for="transf-valor">Valor do veículo (R$)</label>
+                                <div class="sim-input-prefix">
+                                    <span class="sim-prefix">R$</span>
+                                    <input type="number" id="transf-valor" class="sim-input" placeholder="35000" min="0" step="1000" value="">
+                                </div>
+                            </div>
+                            <div class="sim-campo-grupo">
+                                <label class="sim-campo-label" for="transf-origem">Estado de origem do veículo</label>
+                                <select id="transf-origem" class="sim-select">
+                                    <option value="">Selecione o estado</option>
+                                    <option value="RJ">Rio de Janeiro</option>
+                                    <option value="SP">São Paulo</option>
+                                    <option value="MG">Minas Gerais</option>
+                                    <option value="ES">Espírito Santo</option>
+                                    <option value="outros">Outro estado</option>
+                                </select>
+                            </div>
+                            <div class="sim-campo-grupo">
+                                <label class="sim-campo-label" for="transf-destino">Estado de destino</label>
+                                <select id="transf-destino" class="sim-select">
+                                    <option value="RJ" selected>Rio de Janeiro</option>
+                                    <option value="SP">São Paulo</option>
+                                    <option value="MG">Minas Gerais</option>
+                                    <option value="ES">Espírito Santo</option>
+                                    <option value="outros">Outro estado</option>
+                                </select>
+                            </div>
+                            <div class="sim-campo-grupo">
+                                <label class="sim-campo-label" for="transf-ano">Ano do veículo</label>
+                                <select id="transf-ano" class="sim-select">
+                                    <option value="novo">2022 ou mais novo</option>
+                                    <option value="medio" selected>2015 a 2021</option>
+                                    <option value="antigo">2014 ou mais antigo</option>
+                                </select>
+                            </div>
+                            <button class="sim-calcular-btn" id="transf-calcular">
+                                Calcular custo total
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
+                        </div>
+
+                        <div class="sim-transf-resultado" id="transf-resultado" style="display:none">
+                            <div class="sim-pron-header">
+                                <div class="sim-pron-header-left">
+                                    <div class="sim-pron-brasao">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                            <path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="sim-pron-orgao">DETRAN · Simulação de Custos</div>
+                                        <div class="sim-pron-nome-doc">Estimativa de Transferência</div>
+                                    </div>
+                                </div>
+                                <span class="sim-pron-badge" style="background:#0f2a1a;color:#22c55e">Estimativa</span>
+                            </div>
+                            <div class="sim-pron-body">
+                                <div class="sim-pron-grid">
+                                    <div class="sim-pron-campo">
+                                        <div class="sim-pron-campo-label">DETRAN (ITCMD/taxas)</div>
+                                        <div class="sim-pron-campo-val" id="transf-taxa-detran">—</div>
+                                    </div>
+                                    <div class="sim-pron-campo">
+                                        <div class="sim-pron-campo-label">Vistoria obrigatória</div>
+                                        <div class="sim-pron-campo-val" id="transf-vistoria">—</div>
+                                    </div>
+                                    <div class="sim-pron-campo">
+                                        <div class="sim-pron-campo-label">Honorários despachante</div>
+                                        <div class="sim-pron-campo-val" style="color:#F5A623" id="transf-honorarios">—</div>
+                                    </div>
+                                    <div class="sim-pron-campo" style="grid-column: span 2">
+                                        <div class="sim-pron-campo-label">Custo total estimado</div>
+                                        <div class="sim-pron-campo-val sim-pron-grande" id="transf-total" style="color:#22c55e">—</div>
+                                    </div>
+                                    <div class="sim-pron-campo">
+                                        <div class="sim-pron-campo-label">Prazo estimado</div>
+                                        <div class="sim-pron-campo-val" id="transf-prazo">—</div>
+                                    </div>
+                                </div>
+                                <div class="sim-pron-alerta" style="display:flex;background:#0d1829;border:1px solid #1e3a5f">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01" stroke-linecap="round"/></svg>
+                                    <div style="font-size:12px;color:#94a3b8;line-height:1.6">Valores estimados com base nas tabelas DETRAN-RJ 2025. O custo real pode variar conforme débitos, restrições e situação do veículo. <strong style="color:#e2e8f0">Peça um orçamento exato sem compromisso.</strong></div>
+                                </div>
+                            </div>
+                            <div class="sim-pron-footer">
+                                <div class="sim-pron-footer-info">
+                                    Estimativa baseada na tabela DETRAN-RJ 2025<br>
+                                    <span class="sim-pron-footer-aviso">Valores sujeitos a alteração · Consulte para confirmação</span>
+                                </div>
+                                <a class="sim-pron-cta" id="transf-cta" href="#" target="_blank" rel="noopener" aria-label="Solicitar orçamento de transferência">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                                    Solicitar orçamento exato
+                                </a>
+                            </div>
                         </div>
 
                     </div>
+
                 </div>
+
+                <!-- ==========================================
+                     PAINEL 3 — SITUAÇÃO DO VEÍCULO
+                =========================================== -->
+                <div class="sim-painel" id="sim-painel-veiculo" role="tabpanel" aria-labelledby="sim-tab-veiculo" hidden>
+
+                    <div class="sim-veiculo-wrap">
+                        <div class="sim-veiculo-busca">
+                            <div class="sim-campo-grupo">
+                                <label class="sim-campo-label" for="veiculo-placa">Digite a placa do veículo</label>
+                                <div class="sim-placa-input-wrap">
+                                    <div class="sim-placa-flag" aria-hidden="true">
+                                        <span class="sim-placa-br">BR</span>
+                                    </div>
+                                    <input type="text" id="veiculo-placa" class="sim-input sim-placa-input"
+                                           placeholder="ABC-1234 ou ABC1D23"
+                                           maxlength="8" autocomplete="off"
+                                           aria-label="Placa do veículo"/>
+                                </div>
+                                <p class="sim-campo-hint">Formato antigo (ABC-1234) ou Mercosul (ABC1D23)</p>
+                            </div>
+                            <div class="sim-campo-grupo">
+                                <label class="sim-campo-label" for="veiculo-estado">Estado do veículo</label>
+                                <select id="veiculo-estado" class="sim-select">
+                                    <option value="RJ" selected>Rio de Janeiro</option>
+                                    <option value="SP">São Paulo</option>
+                                    <option value="MG">Minas Gerais</option>
+                                    <option value="ES">Espírito Santo</option>
+                                    <option value="outros">Outro estado</option>
+                                </select>
+                            </div>
+                            <button class="sim-calcular-btn" id="veiculo-consultar">
+                                Verificar situação
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35" stroke-linecap="round"/></svg>
+                            </button>
+                        </div>
+
+                        <div class="sim-veiculo-resultado" id="veiculo-resultado" style="display:none">
+                            <div class="sim-pron-header">
+                                <div class="sim-pron-header-left">
+                                    <div class="sim-pron-brasao">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                            <path d="M9 17H5a2 2 0 01-2-2V9l2-5h10l2 5v6a2 2 0 01-2 2h-4M9 17v2m6-2v2M3 10h18" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="sim-pron-orgao">DETRAN · Consulta Veicular</div>
+                                        <div class="sim-pron-nome-doc">Situação do Veículo — <span id="veiculo-placa-display">—</span></div>
+                                    </div>
+                                </div>
+                                <span class="sim-pron-badge" id="veiculo-badge">Verificando</span>
+                            </div>
+                            <div class="sim-pron-body">
+                                <div class="sim-checklist" id="veiculo-checklist"></div>
+                                <div class="sim-pron-alerta" id="veiculo-alerta" style="display:none">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01" stroke-linecap="round"/>
+                                    </svg>
+                                    <div id="veiculo-alerta-txt"></div>
+                                </div>
+                            </div>
+                            <div class="sim-pron-footer">
+                                <div class="sim-pron-footer-info">
+                                    Simulação ilustrativa baseada em padrões comuns<br>
+                                    <span class="sim-pron-footer-aviso">Para consulta oficial acesse o DETRAN do seu estado</span>
+                                </div>
+                                <a class="sim-pron-cta" id="veiculo-cta" href="#" target="_blank" rel="noopener" aria-label="Regularizar veículo com despachante">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                                    Quero regularizar meu veículo
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ==========================================
+                     PAINEL 4 — VENCIMENTO DO LICENCIAMENTO
+                =========================================== -->
+                <div class="sim-painel" id="sim-painel-licenciamento" role="tabpanel" aria-labelledby="sim-tab-licenciamento" hidden>
+
+                    <div class="sim-licenc-wrap">
+                        <div class="sim-licenc-inputs">
+                            <div class="sim-campo-grupo">
+                                <label class="sim-campo-label" for="licenc-mes">Mês de vencimento do licenciamento</label>
+                                <select id="licenc-mes" class="sim-select">
+                                    <option value="">Selecione o mês</option>
+                                    <option value="1">Janeiro</option>
+                                    <option value="2">Fevereiro</option>
+                                    <option value="3">Março</option>
+                                    <option value="4">Abril</option>
+                                    <option value="5">Maio</option>
+                                    <option value="6">Junho</option>
+                                    <option value="7">Julho</option>
+                                    <option value="8">Agosto</option>
+                                    <option value="9">Setembro</option>
+                                    <option value="10">Outubro</option>
+                                    <option value="11">Novembro</option>
+                                    <option value="12">Dezembro</option>
+                                </select>
+                                <p class="sim-campo-hint">O mês consta no CRLV do seu veículo</p>
+                            </div>
+                            <div class="sim-campo-grupo">
+                                <label class="sim-campo-label" for="licenc-valor">Valor venal do veículo (R$)</label>
+                                <div class="sim-input-prefix">
+                                    <span class="sim-prefix">R$</span>
+                                    <input type="number" id="licenc-valor" class="sim-input" placeholder="30000" min="0" step="1000"/>
+                                </div>
+                                <p class="sim-campo-hint">Usado para calcular o IPVA proporcional se houver atraso</p>
+                            </div>
+                            <button class="sim-calcular-btn" id="licenc-calcular">
+                                Calcular situação
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
+                        </div>
+
+                        <div class="sim-licenc-resultado" id="licenc-resultado" style="display:none">
+                            <div class="sim-pron-header">
+                                <div class="sim-pron-header-left">
+                                    <div class="sim-pron-brasao">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                            <rect x="3" y="4" width="18" height="18" rx="2"/>
+                                            <path d="M16 2v4M8 2v4M3 10h18" stroke-linecap="round"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="sim-pron-orgao">DETRAN · Licenciamento Anual</div>
+                                        <div class="sim-pron-nome-doc">Status do CRLV</div>
+                                    </div>
+                                </div>
+                                <span class="sim-pron-badge" id="licenc-badge">Calculando</span>
+                            </div>
+                            <div class="sim-pron-body">
+                                <div class="sim-pron-grid">
+                                    <div class="sim-pron-campo">
+                                        <div class="sim-pron-campo-label">Dias até vencer</div>
+                                        <div class="sim-pron-campo-val sim-pron-grande" id="licenc-dias">—</div>
+                                    </div>
+                                    <div class="sim-pron-campo">
+                                        <div class="sim-pron-campo-label">Vencimento</div>
+                                        <div class="sim-pron-campo-val" id="licenc-vencimento">—</div>
+                                    </div>
+                                    <div class="sim-pron-campo">
+                                        <div class="sim-pron-campo-label">Taxa DETRAN estimada</div>
+                                        <div class="sim-pron-campo-val" id="licenc-taxa">—</div>
+                                    </div>
+                                    <div class="sim-pron-campo">
+                                        <div class="sim-pron-campo-label">Multa por atraso</div>
+                                        <div class="sim-pron-campo-val" id="licenc-multa" style="color:#ef4444">—</div>
+                                    </div>
+                                    <div class="sim-pron-campo">
+                                        <div class="sim-pron-campo-label">Acréscimo IPVA (atraso)</div>
+                                        <div class="sim-pron-campo-val" id="licenc-ipva" style="color:#ef4444">—</div>
+                                    </div>
+                                    <div class="sim-pron-campo">
+                                        <div class="sim-pron-campo-label">Custo total se atrasar</div>
+                                        <div class="sim-pron-campo-val sim-pron-grande" id="licenc-total-atraso" style="color:#ef4444">—</div>
+                                    </div>
+                                </div>
+
+                                <div class="sim-licenc-cronometro" id="licenc-cronometro">
+                                    <div class="sim-licenc-cron-label" id="licenc-cron-label">Tempo até o vencimento</div>
+                                    <div class="sim-licenc-cron-barra-bg">
+                                        <div class="sim-licenc-cron-barra-fill" id="licenc-cron-barra"></div>
+                                    </div>
+                                    <div class="sim-licenc-cron-legenda">
+                                        <span>Hoje</span>
+                                        <span id="licenc-cron-fim">Vencimento</span>
+                                    </div>
+                                </div>
+
+                                <div class="sim-pron-alerta" id="licenc-alerta" style="display:none">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01" stroke-linecap="round"/>
+                                    </svg>
+                                    <div id="licenc-alerta-txt"></div>
+                                </div>
+                            </div>
+                            <div class="sim-pron-footer">
+                                <div class="sim-pron-footer-info">
+                                    Baseado na tabela DETRAN-RJ 2025 · Multa: R$ 293,47 + juros<br>
+                                    <span class="sim-pron-footer-aviso">Valores estimados · Confirme no site do DETRAN</span>
+                                </div>
+                                <a class="sim-pron-cta" id="licenc-cta" href="#" target="_blank" rel="noopener" aria-label="Licenciar veículo com despachante">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                                    Licenciar sem ir ao DETRAN
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
         </section>
 

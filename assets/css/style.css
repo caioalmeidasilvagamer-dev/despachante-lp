@@ -2849,122 +2849,229 @@ h3.depoimento-nome {
 }
 
 /* =============================================
-   SIMULADOR DE PONTOS NA CNH
+   CENTRAL DE SIMULADORES — Layout
 ============================================== */
 .simulador-section {
-  background: #0d1829;
-  padding: clamp(4rem, 8vw, 7rem) 0;
+  padding: 80px 24px 60px;
+  background: var(--bg-base);
 }
 
 .simulador-container {
-  width: min(100%, 1100px);
-  margin-inline: auto;
-  padding-inline: clamp(1rem, 5vw, 5rem);
+  max-width: 960px;
+  margin: 0 auto;
 }
 
 .simulador-header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 36px;
 }
 
 .simulador-badge {
   display: inline-block;
-  background: #92400e;
-  color: #FCD34D;
-  font-size: 11px;
+  padding: 6px 16px;
+  border-radius: 100px;
+  background: rgba(245, 166, 35, 0.12);
+  border: 1px solid rgba(245, 166, 35, 0.25);
+  color: #F5A623;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: .1em;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
-  border-radius: 6px;
-  padding: 4px 14px;
-  margin-bottom: 1rem;
+  margin-bottom: 16px;
 }
 
 .simulador-titulo {
-  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
   font-weight: 800;
-  color: #ffffff;
+  color: #f1f5f9;
   line-height: 1.2;
-  margin-bottom: .75rem;
+  margin: 0 0 12px;
 }
 
 .simulador-titulo em {
+  font-style: normal;
   color: #F5A623;
-  font-style: italic;
 }
 
 .simulador-sub {
-  font-size: clamp(.9rem, 2vw, 1.05rem);
+  font-size: 15px;
   color: #94a3b8;
-  max-width: 520px;
-  margin-inline: auto;
-  line-height: 1.7;
+  max-width: 560px;
+  margin: 0 auto;
+  line-height: 1.6;
 }
 
-.simulador-body {
+/* =============================================
+   TABS DE NAVEGAÇÃO
+============================================== */
+.sim-tabs {
   display: grid;
-  grid-template-columns: 1fr 1.4fr;
-  gap: 2rem;
-  align-items: start;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 28px;
 }
 
-/* --- Cards de multa --- */
+.sim-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #111827;
+  border: 1px solid #1e3a5f;
+  border-radius: 8px;
+  color: #94a3b8;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+  font-family: inherit;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.sim-tab svg { flex-shrink: 0; }
+
+.sim-tab:hover {
+  border-color: #2d5a8f;
+  color: #e2e8f0;
+}
+
+.sim-tab--ativo {
+  background: #F5A623;
+  border-color: #F5A623;
+  color: #0d1829;
+}
+
+.sim-tab--ativo:hover {
+  background: #e09415;
+  border-color: #e09415;
+  color: #0d1829;
+}
+
+/* =============================================
+   PAINÉIS
+============================================== */
+.sim-painel { display: none; }
+.sim-painel--ativo { display: block; animation: sim-fade-in 200ms ease; }
+
+@keyframes sim-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =============================================
+   CARDS DE MULTA (CNH)
+============================================== */
 .sim-multas-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
+  margin-bottom: 20px;
 }
 
-.sim-multa-card {
+.sim-mc {
   background: #111827;
   border: 1px solid #1e3a5f;
-  border-radius: 10px;
-  padding: 16px;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 200ms;
+}
+
+.sim-mc--ativo { border-color: #F5A623; }
+
+.sim-mc-visual {
+  height: 110px;
+  position: relative;
+  overflow: hidden;
+  background: #0d1829;
+}
+
+.sim-mc-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 300ms ease;
+}
+
+.sim-mc:hover .sim-mc-img { transform: scale(1.04); }
+
+.sim-mc-placeholder {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 6px;
+  width: 100%;
+  height: 100%;
+  background: #0d1829;
+  border-bottom: 1px dashed #1e3a5f;
 }
 
-.sim-multa-tipo {
-  font-size: 14px;
-  font-weight: 700;
-  color: #e2e8f0;
+.sim-mc-placeholder svg { color: #2d5a8f; }
+
+.sim-mc-placeholder span {
+  font-size: 10px;
+  font-family: monospace;
+  color: #2d5a8f;
 }
 
-.sim-multa-detalhe {
-  font-size: 11px;
-  color: #64748b;
-  line-height: 1.4;
-  flex: 1;
-}
+.sim-mc-img:not([style*="display:none"]) + .sim-mc-placeholder { display: none; }
 
-.sim-multa-row {
+.sim-mc-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 8px;
+  padding: 12px 14px 4px;
 }
 
-.sim-multa-label {
+.sim-mc-tipo { font-size: 14px; font-weight: 700; color: #ffffff; }
+
+.sim-mc-pts {
   font-size: 11px;
-  color: #94a3b8;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 20px;
+}
+
+.sim-pts-leve      { background: #0f2a1a; color: #22c55e; }
+.sim-pts-media     { background: #2a1a00; color: #F5A623; }
+.sim-pts-grave     { background: #2a0a0a; color: #ef4444; }
+.sim-pts-gravissima{ background: #3a0000; color: #ff6b6b; }
+
+.sim-mc-exemplo {
+  font-size: 11px;
+  color: #64748b;
+  padding: 0 14px 10px;
+  line-height: 1.5;
+}
+
+.sim-mc-counter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #0d1829;
+  padding: 10px 14px;
+  border-top: 1px solid #1e3a5f;
+}
+
+.sim-mc-counter-label {
+  font-size: 11px;
+  color: #64748b;
   text-transform: uppercase;
-  letter-spacing: .06em;
+  letter-spacing: .07em;
   font-weight: 600;
 }
 
-.sim-count {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+.sim-mc-btns { display: flex; align-items: center; gap: 10px; }
 
-.sim-btn-cnt {
+.sim-mc-btn {
   background: #1e3a5f;
   border: none;
   color: #ffffff;
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border-radius: 6px;
   font-size: 18px;
   font-weight: 700;
@@ -2976,228 +3083,466 @@ h3.depoimento-nome {
   line-height: 1;
 }
 
-.sim-btn-cnt:hover { background: #2d5a8f; }
-.sim-btn-cnt:active { transform: scale(.95); }
+.sim-mc-btn:hover  { background: #2d5a8f; }
+.sim-mc-btn:active { transform: scale(.95); }
+.sim-mc-val { font-size: 16px; font-weight: 800; color: #F5A623; min-width: 20px; text-align: center; }
 
-.sim-cnt-val {
-  font-size: 18px;
-  font-weight: 800;
-  color: #F5A623;
-  min-width: 22px;
-  text-align: center;
-}
-
-/* --- Resultado --- */
-.sim-resultado {
+/* =============================================
+   PRONTUÁRIO (resultado compartilhado)
+============================================== */
+.sim-prontuario,
+.sim-transf-resultado,
+.sim-veiculo-resultado,
+.sim-licenc-resultado {
   background: #111827;
   border: 1px solid #1e3a5f;
   border-radius: 14px;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  overflow: hidden;
 }
 
-.sim-res-topo {
+.sim-pron-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid #1e3a5f;
   display: flex;
-  align-items: flex-start;
-  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
-.sim-pontos-display {
+.sim-pron-header-left { display: flex; align-items: center; gap: 12px; }
+
+.sim-pron-brasao {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #1e3a5f;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  color: #F5A623;
   flex-shrink: 0;
 }
 
-.sim-pontos-num {
-  font-size: 52px;
-  font-weight: 900;
-  color: #F5A623;
-  line-height: 1;
-}
-
-.sim-pontos-label {
-  font-size: 11px;
+.sim-pron-orgao {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .1em;
   color: #64748b;
-  margin-top: 4px;
-  white-space: nowrap;
+  text-transform: uppercase;
+  margin-bottom: 2px;
 }
 
-.sim-barra-wrap { flex: 1; min-width: 160px; }
+.sim-pron-nome-doc { font-size: 13px; font-weight: 600; color: #e2e8f0; }
 
-.sim-barra-labels {
+.sim-pron-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  transition: background 300ms, color 300ms;
+}
+
+.sim-pron-body { padding: 18px; }
+
+.sim-pron-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+  border: 1px solid #1e3a5f;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.sim-pron-campo {
+  padding: 12px 14px;
+  border-right: 1px solid #1e3a5f;
+  border-bottom: 1px solid #1e3a5f;
+  background: #0d1829;
+}
+
+.sim-pron-campo:nth-child(3n)        { border-right: none; }
+.sim-pron-campo:nth-last-child(-n+3) { border-bottom: none; }
+.sim-pron-campo[style*="span 2"]     { grid-column: span 2; }
+
+.sim-pron-campo-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: #64748b;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.sim-pron-campo-val {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e2e8f0;
+  transition: color 300ms;
+}
+
+.sim-pron-grande { font-size: 24px; font-weight: 800; }
+
+.sim-pron-barra-wrap { margin-bottom: 16px; }
+
+.sim-pron-barra-labels {
   display: flex;
   justify-content: space-between;
-  font-size: 11px;
+  font-size: 10px;
   color: #64748b;
   margin-bottom: 6px;
 }
 
-.sim-barra-bg {
+.sim-pron-barra-bg {
   background: #1e3a5f;
-  border-radius: 5px;
-  height: 10px;
+  border-radius: 4px;
+  height: 8px;
   overflow: hidden;
 }
 
-.sim-barra-fill {
+.sim-pron-barra-fill {
   height: 100%;
-  border-radius: 5px;
+  border-radius: 4px;
   width: 0%;
   background: #22c55e;
   transition: width 400ms ease, background 400ms ease;
 }
 
-.sim-faltam {
-  font-size: 11px;
+.sim-pron-infra-wrap { margin-bottom: 14px; }
+
+.sim-pron-infra-titulo {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
   color: #64748b;
-  margin-top: 6px;
-  line-height: 1.4;
+  font-weight: 700;
+  margin-bottom: 8px;
 }
 
-.sim-reset {
-  background: none;
-  border: 1px solid #1e3a5f;
-  color: #64748b;
-  font-size: 12px;
-  border-radius: 6px;
-  padding: 6px 14px;
-  cursor: pointer;
-  transition: all 120ms;
-  white-space: nowrap;
-  align-self: flex-start;
+.sim-pron-infra-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #1e3a5f;
+  font-size: 13px;
 }
 
-.sim-reset:hover { border-color: #F5A623; color: #F5A623; }
+.sim-pron-infra-item:last-child { border-bottom: none; }
+.sim-pron-infra-tipo  { color: #94a3b8; }
+.sim-pron-infra-right { display: flex; align-items: center; gap: 8px; }
+.sim-pron-infra-qtd   { color: #e2e8f0; font-weight: 600; }
 
-/* --- Status --- */
-.sim-status-card {
+.sim-pron-infra-pts {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.sim-pron-alerta {
   border-radius: 8px;
-  padding: 14px 16px;
+  padding: 12px 14px;
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-}
-
-.sim-status-icon {
-  font-size: 22px;
-  flex-shrink: 0;
-  line-height: 1;
-}
-
-.sim-status-titulo {
-  font-size: 14px;
-  font-weight: 700;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.6;
+  transition: background 300ms;
   margin-bottom: 4px;
 }
 
-.sim-status-desc {
-  font-size: 12px;
-  line-height: 1.6;
-}
-
-.sim-status--ok    { background: #0f2a1a; border: 1px solid #166534; }
-.sim-status--aviso { background: #2a1a00; border: 1px solid #92400e; }
-.sim-status--risco { background: #2a0a0a; border: 1px solid #991b1b; }
-
-/* --- Stats --- */
-.sim-stats-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.sim-stat-card {
-  background: #0d1829;
-  border: 1px solid #1e3a5f;
-  border-radius: 8px;
-  padding: 14px;
+.sim-pron-footer {
+  border-top: 1px solid #1e3a5f;
+  padding: 14px 18px;
   display: flex;
+  align-items: center;
+  justify-content: center;
   flex-direction: column;
-  gap: 4px;
-}
-
-.sim-stat-label {
-  font-size: 11px;
-  color: #64748b;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  font-weight: 600;
-}
-
-.sim-stat-val {
-  font-size: 22px;
-  font-weight: 800;
-  color: #e2e8f0;
-}
-
-.sim-stat-val.sim-amber { color: #F5A623; }
-.sim-stat-val.sim-green { color: #22c55e; }
-.sim-stat-val.sim-red   { color: #ef4444; }
-
-/* --- CTA --- */
-.sim-cta {
-  background: #0d1829;
-  border: 1px solid #b45309;
-  border-radius: 10px;
-  padding: 20px;
   text-align: center;
-  display: none;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
-.sim-cta.sim-cta--visible { display: block; }
+.sim-pron-footer-info { font-size: 10px; color: #64748b; line-height: 1.6; }
+.sim-pron-footer-aviso { font-size: 9px; opacity: .6; }
 
-.sim-cta-titulo {
-  font-size: 15px;
-  font-weight: 700;
-  color: #ffffff;
-  margin-bottom: 6px;
-}
-
-.sim-cta-sub {
-  font-size: 13px;
-  color: #94a3b8;
-  line-height: 1.6;
-  margin-bottom: 16px;
-}
-
-.sim-cta-btn {
+.sim-pron-cta {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   background: #25D366;
   color: #ffffff;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 13px;
   text-decoration: none;
   border-radius: 8px;
-  padding: 13px 26px;
-  transition: background 150ms, transform 100ms;
+  padding: 10px 18px;
+  transition: background 150ms;
+  flex-shrink: 0;
 }
 
-.sim-cta-btn:hover {
-  background: #1fb85a;
-  transform: translateY(-1px);
+.sim-pron-cta:hover { background: #1fb85a; }
+
+/* =============================================
+   FORMULÁRIOS COMPARTILHADOS
+============================================== */
+.sim-transf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 24px;
+  align-items: start;
 }
 
-.sim-cta-hint {
+.sim-veiculo-wrap,
+.sim-licenc-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.sim-transf-inputs,
+.sim-veiculo-busca,
+.sim-licenc-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sim-campo-grupo { display: flex; flex-direction: column; gap: 6px; }
+
+.sim-campo-label {
   font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: #94a3b8;
+}
+
+.sim-campo-hint { font-size: 11px; color: #64748b; line-height: 1.4; }
+
+.sim-input-prefix {
+  display: flex;
+  align-items: center;
+  background: #0d1829;
+  border: 1px solid #1e3a5f;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.sim-prefix {
+  padding: 0 12px;
+  font-size: 13px;
   color: #64748b;
-  margin-top: 10px;
+  font-weight: 600;
+  border-right: 1px solid #1e3a5f;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  background: #111827;
+  white-space: nowrap;
 }
 
-/* --- Responsive --- */
+.sim-input {
+  background: #0d1829;
+  border: 1px solid #1e3a5f;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #ffffff;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 150ms;
+  width: 100%;
+  height: 44px;
+}
+
+.sim-input-prefix .sim-input {
+  border: none;
+  border-radius: 0;
+  flex: 1;
+}
+
+.sim-input:focus { border-color: #F5A623; }
+
+.sim-select {
+  background: #0d1829;
+  border: 1px solid #1e3a5f;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #e2e8f0;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 150ms;
+  width: 100%;
+  height: 44px;
+  cursor: pointer;
+}
+
+.sim-select:focus { border-color: #F5A623; }
+.sim-select option { background: #111827; color: #e2e8f0; }
+
+.sim-calcular-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 13px 20px;
+  background: #F5A623;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0d1829;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 150ms, transform 100ms;
+  margin-top: 4px;
+}
+
+.sim-calcular-btn:hover  { background: #e09415; }
+.sim-calcular-btn:active { transform: scale(.98); }
+
+/* Placa input */
+.sim-placa-input-wrap {
+  display: flex;
+  align-items: center;
+  background: #0d1829;
+  border: 1px solid #1e3a5f;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 150ms;
+}
+
+.sim-placa-input-wrap:focus-within { border-color: #F5A623; }
+
+.sim-placa-flag {
+  padding: 0 12px;
+  background: #1e3a5f;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  border-right: 1px solid #1e3a5f;
+}
+
+.sim-placa-br {
+  font-size: 10px;
+  font-weight: 800;
+  color: #F5A623;
+  letter-spacing: .1em;
+}
+
+.sim-placa-input {
+  border: none;
+  border-radius: 0;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+/* Checklist veículo */
+.sim-checklist { margin-bottom: 16px; }
+
+.sim-check-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #1e3a5f;
+  font-size: 13px;
+}
+
+.sim-check-item:last-child { border-bottom: none; }
+
+.sim-check-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 14px;
+}
+
+.sim-check-icon--ok       { background: #0f2a1a; color: #22c55e; }
+.sim-check-icon--pendente { background: #2a0a0a; color: #ef4444; }
+.sim-check-icon--aviso    { background: #2a1a00; color: #F5A623; }
+
+.sim-check-texto { flex: 1; color: #e2e8f0; }
+.sim-check-status { font-size: 11px; font-weight: 700; white-space: nowrap; }
+.sim-check-status--ok       { color: #22c55e; }
+.sim-check-status--pendente { color: #ef4444; }
+.sim-check-status--aviso    { color: #F5A623; }
+
+/* Cronômetro licenciamento */
+.sim-licenc-cronometro { margin-bottom: 16px; }
+
+.sim-licenc-cron-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.sim-licenc-cron-barra-bg {
+  background: #1e3a5f;
+  border-radius: 4px;
+  height: 12px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.sim-licenc-cron-barra-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 600ms ease, background 600ms ease;
+}
+
+.sim-licenc-cron-legenda {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #64748b;
+}
+
+/* =============================================
+   RESPONSIVE
+============================================== */
 @media (max-width: 900px) {
-  .simulador-body {
-    grid-template-columns: 1fr;
-  }
+  .simulador-section { padding: 60px 20px 48px; }
+  .sim-tabs { grid-template-columns: 1fr 1fr; }
+  .sim-transf-grid,
+  .sim-veiculo-wrap,
+  .sim-licenc-wrap { grid-template-columns: 1fr; }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
+  .simulador-section { padding: 48px 16px 36px; }
+  .simulador-badge { font-size: 11px; padding: 5px 12px; }
+  .simulador-sub { font-size: 14px; }
+  .sim-tabs {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .sim-tab {
+    padding: 14px 10px;
+    font-size: 11px;
+    gap: 6px;
+    flex-direction: column;
+    white-space: normal;
+    line-height: 1.3;
+  }
+  .sim-tab svg { width: 20px; height: 20px; flex-shrink: 0; }
   .sim-multas-grid { grid-template-columns: 1fr; }
-  .sim-stats-grid  { grid-template-columns: 1fr; }
-  .sim-res-topo    { flex-direction: column; align-items: stretch; }
+  .sim-pron-grid   { grid-template-columns: 1fr 1fr; }
+  .sim-pron-campo:nth-child(3n)        { border-right: 1px solid #1e3a5f; }
+  .sim-pron-campo:nth-child(2n)        { border-right: none; }
+  .sim-pron-campo:nth-last-child(-n+2) { border-bottom: none; }
 }
