@@ -3218,6 +3218,192 @@ h2.section-title em {
 }
 
 /* =============================================
+   SEÇÃO SOBRE O DESPACHANTE
+============================================== */
+.sobre-section {
+    background-color: #0b1120;
+    padding-block: var(--espaco-16);
+    border-top: 1px solid var(--cor-borda);
+}
+
+.sobre-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: var(--espaco-12);
+    align-items: center;
+    max-width: 1000px;
+    margin-inline: auto;
+}
+
+.sobre-foto-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #111827;
+    border: 1px solid #1e3a5f;
+}
+
+.sobre-foto {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.sobre-foto-wrap:not(:has(img[src]))::after,
+.sobre-foto[src=""]:not([src]) ~ .sobre-foto-placeholder {
+    display: flex;
+}
+
+.sobre-foto:not([src]),
+.sobre-foto[src=""] {
+    display: none;
+}
+
+.sobre-foto-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sobre-foto-wrap::after {
+    content: 'Foto do despachante';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--fonte-corpo);
+    font-size: var(--texto-sm);
+    color: var(--cor-texto-muted);
+    background: #111827;
+}
+
+.sobre-foto-wrap:has(img[src])::after {
+    display: none;
+}
+
+.sobre-texto-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaco-4);
+}
+
+.sobre-nome {
+    font-family: var(--fonte-display);
+    font-weight: 400;
+    font-style: italic;
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    line-height: 1.2;
+    color: var(--cor-texto);
+    margin: 0;
+}
+
+.sobre-sub {
+    font-family: var(--fonte-corpo);
+    font-size: var(--texto-base);
+    color: var(--cor-destaque);
+    margin: 0;
+    font-weight: 600;
+}
+
+.sobre-bio {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaco-3);
+}
+
+.sobre-bio p {
+    font-family: var(--fonte-corpo);
+    font-size: var(--texto-sm);
+    color: var(--cor-texto-suave);
+    margin: 0;
+    line-height: 1.7;
+}
+
+.sobre-credenciais {
+    list-style: none;
+    padding: 0;
+    margin: var(--espaco-2) 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sobre-credenciais li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--fonte-corpo);
+    font-size: var(--texto-sm);
+    color: var(--cor-texto-suave);
+}
+
+.sobre-credenciais li svg {
+    flex-shrink: 0;
+    color: var(--cor-destaque);
+}
+
+.sobre-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    background: var(--cor-destaque);
+    color: var(--bg-base);
+    border: none;
+    border-radius: 8px;
+    font-family: var(--fonte-corpo);
+    font-size: var(--texto-sm);
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 200ms ease, transform 150ms ease;
+    align-self: flex-start;
+    margin-top: var(--espaco-2);
+}
+
+.sobre-cta:hover {
+    background: #e09415;
+    transform: translateY(-1px);
+}
+
+.sobre-cta svg {
+    transition: transform 200ms ease;
+}
+
+.sobre-cta:hover svg {
+    transform: translateX(3px);
+}
+
+@media (max-width: 768px) {
+    .sobre-grid {
+        grid-template-columns: 1fr;
+        gap: var(--espaco-8);
+    }
+
+    .sobre-foto-wrap {
+        max-width: 300px;
+        margin-inline: auto;
+    }
+
+    .sobre-texto-col {
+        text-align: center;
+        align-items: center;
+    }
+
+    .sobre-credenciais {
+        align-items: center;
+    }
+
+    .sobre-cta {
+        align-self: center;
+    }
+}
+
+/* =============================================
    SEÇÃO TABELA DE SERVIÇOS / HONORÁRIOS
 ============================================== */
 .honorarios-section {
