@@ -407,6 +407,38 @@ async function carregarCTB() {
 })();
 
 // =============================================
+// ABAS DE DOCUMENTOS NECESSÁRIOS
+// =============================================
+(function initDocTabs() {
+  var tabs = document.querySelectorAll('.doc-tab');
+  var paineis = document.querySelectorAll('.doc-painel');
+  if (!tabs.length || !paineis.length) return;
+
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var alvo = tab.getAttribute('aria-controls');
+
+      tabs.forEach(function (t) {
+        t.classList.remove('doc-tab--ativo');
+        t.setAttribute('aria-selected', 'false');
+      });
+      tab.classList.add('doc-tab--ativo');
+      tab.setAttribute('aria-selected', 'true');
+
+      paineis.forEach(function (p) {
+        if (p.id === alvo) {
+          p.removeAttribute('hidden');
+          p.classList.add('doc-painel--ativo');
+        } else {
+          p.setAttribute('hidden', '');
+          p.classList.remove('doc-painel--ativo');
+        }
+      });
+    });
+  });
+})();
+
+// =============================================
 // SIMULADOR DE CUSTO DE TRANSFERÊNCIA
 // =============================================
 (function initTransferencia() {
