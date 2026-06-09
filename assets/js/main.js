@@ -228,7 +228,26 @@ async function carregarCTB() {
         initHeroCarousel();
         initMobileMenu();
         initContatoForm();
+        initImageFallbacks();
     });
+
+    function initImageFallbacks() {
+        var imgs = document.querySelectorAll('img[src^="assets/images/"]');
+        imgs.forEach(function (img) {
+            img.addEventListener('error', function () {
+                this.style.display = 'none';
+                var wrap = this.parentElement;
+                if (wrap && !wrap.querySelector('.img-placeholder')) {
+                    var ph = document.createElement('div');
+                    ph.className = 'img-placeholder';
+                    ph.style.cssText = 'display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;background:#111827;border:1px dashed #1e3a5f;border-radius:8px;position:absolute;inset:0';
+                    ph.innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#4b5563" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span style="margin-top:8px;font-size:11px;color:#4b5563;font-family:var(--fonte-corpo)">Imagem em breve</span>';
+                    wrap.style.position = 'relative';
+                    wrap.appendChild(ph);
+                }
+            });
+        });
+    }
 })();
 
 (function initProcessoTimeline() {
