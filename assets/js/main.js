@@ -480,8 +480,23 @@ async function carregarCTB() {
   var MULTA_ATRASO_TRANSF = 130.16;
   var PRAZO_DIAS = 30;
 
+  /* Taxas DETRAN-RJ 2025 */
+  var TAXA_DETRAN = 154.36;
+  var VISTORIA    = 176.21;
+  var HONOR_MIN   = 350;
+  var HONOR_MAX   = 550;
+
   function fmt(v) {
     return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+  function isRJ(v) { return v === 'RJ'; }
+
+  function isForaRJ(v) { return v && v !== 'RJ'; }
+
+  function labelEstado(v) {
+    var map = { RJ: 'Rio de Janeiro', SP: 'São Paulo', MG: 'Minas Gerais', ES: 'Espírito Santo', outros: 'Outro estado' };
+    return map[v] || v;
   }
 
   btn.addEventListener('click', async function () {
@@ -497,27 +512,70 @@ async function carregarCTB() {
       return;
     }
 
-    var valorITCMD = valorRaw * CTB.transferencia.itcmd_rj;
+    var itcmd = valorRaw * CTB.transferencia.itcmd_rj;
     var multaAtraso = 0;
-    if (ano === 'antigo') multaAtraso = CTB.transferencia.multa_atraso;
-    else if (ano === 'medio') multaAtraso = 0;
+    if (ano === 'antigo') multaAtraso = MULTA_ATRASO_TRANSF;
 
-    var taxaDetran = CTB.transferencia.taxa_detran_base + multaAtraso;
-    var vistoria = CTB.transferencia.vistoria_rj;
-    var honorarios = CTB.transferencia.honorarios;
-    var total = valorITCMD + taxaDetran + vistoria + honorarios;
+    var taxaDetran = TAXA_DETRAN + multaAtraso;
+    var vistoria = VISTORIA;
+    var honorarios = HONOR_MIN;
+    var prazo, avisoTxt;
+    var avisoEl = document.getElementById('transf-aviso-interestadual');
+    var avisoTxtEl = document.getElementById('transf-aviso-interestadual-txt');
 
-    var prazo = '5 a 10 dias úteis';
-    if (origem !== 'RJ' || destino !== 'RJ') prazo = '10 a 15 dias úteis';
+    var dentroRJ = isRJ(origem) && isRJ(destino);
 
-    document.getElementById('transf-taxa-detran').textContent = fmt(valorITCMD) + ' + ' + fmt(taxaDetran);
+    if (dentroRJ) {
+      /* Cenário 1: RJ → RJ */
+      prazo = '5 a 10 dias úteis';
+      avisoTxt = '';
+    } else if (isForaRJ(origem) && isRJ(destino)) {
+      /* Cenário 2: Outro estado → RJ */
+      prazo = '10 a 20 dias úteis';
+      avisoTxt = '<strong>Veículo de outro estado</strong> exige vistoria obrigatória e pode precisar de baixa no DETRAN de origem.';
+    } else if (isRJ(origem) && isForaRJ(destino)) {
+      /* Cenário 3: RJ → Outro estado */
+      prazo = '7 a 15 dias úteis';
+      avisoTxt = '<strong>A baixa é feita no DETRAN-RJ.</strong> O registro no estado de destino é feito pelo despachante local ou pela parte compradora.';
+    } else {
+      /* Cenário 4: Qualquer → Qualquer (ambos fora RJ) */
+      prazo = '10 a 20 dias úteis';
+      avisoTxt = '<strong>Transferência interestadual.</strong> Processo pode envolver baixa no estado de origem e registro no estado de destino.';
+    }
+
+    var total = itcmd + taxaDetran + vistoria + honorarios;
+
+    document.getElementById('transf-taxa-detran').textContent = fmt(itcmd) + ' + ' + fmt(taxaDetran);
     document.getElementById('transf-vistoria').textContent = fmt(vistoria);
-    document.getElementById('transf-honorarios').textContent = fmt(honorarios);
-    document.getElementById('transf-total').textContent = fmt(total);
+    document.getElementById('transf-honorarios').textContent = fmt(honorarios) + ' a ' + fmt(HONOR_MAX);
+    document.getElementById('transf-total').textContent = fmt(total) + ' a ' + fmt(itcmd + taxaDetran + vistoria + HONOR_MAX);
     document.getElementById('transf-prazo').textContent = prazo;
+
+    if (avisoTxt) {
+      avisoEl.style.display = 'flex';
+      avisoTxtEl.innerHTML = avisoTxt;
+    } else {
+      avisoEl.style.display = 'none';
+    }
 
     var res = document.getElementById('transf-resultado');
     res.style.display = 'block';
+
+    /* Monta mensagem WhatsApp com placa/estado */
+    var nomeEstado = labelEstado(origem);
+    function montarMsgWA(diasLabel) {
+      var linhas = [
+        'Olá! Fiz a simulação de transferência no site.',
+        'Serviço: Transferência de Veículo',
+        'Origem: ' + nomeEstado + ' → Destino: ' + labelEstado(destino),
+        'Valor do veículo: ' + fmt(valorRaw),
+        'Custo total estimado: ' + fmt(total) + ' a ' + fmt(itcmd + taxaDetran + vistoria + HONOR_MAX),
+        'Prazo estimado: ' + prazo,
+      ];
+      if (diasLabel) linhas.push('Dias restantes para transferir: ' + diasLabel);
+      linhas.push('Gostaria de um orçamento exato.');
+      return linhas.join('\n');
+    }
 
     if (dataCompraRaw) {
         var dataCompra = new Date(dataCompraRaw + 'T00:00:00');
@@ -579,15 +637,13 @@ async function carregarCTB() {
             alertaPrazo.style.display = 'none';
         }
 
-        var msgAtual = 'Olá! Fiz a simulação de transferência no site.\nValor do veículo: ' + fmt(valorRaw) + '\nCusto total estimado: ' + fmt(total) + '\nDias restantes para transferir: ' + (diasRestantes > 0 ? diasRestantes : 'VENCIDO') + '\nGostaria de um orçamento exato.';
-        document.getElementById('transf-cta').href = 'https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msgAtual);
+        document.getElementById('transf-cta').href = 'https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(montarMsgWA(diasRestantes > 0 ? diasRestantes : 'VENCIDO'));
     } else {
         document.getElementById('transf-cronometro').style.display = 'none';
         document.getElementById('transf-alerta-prazo').style.display = 'none';
         document.getElementById('transf-dias-prazo').textContent = '—';
         document.getElementById('transf-multa-atraso').textContent = '—';
-        var msg = 'Olá! Fiz a simulação de transferência no site.\nValor do veículo: ' + fmt(valorRaw) + '\nCusto total estimado: ' + fmt(total) + '\nGostaria de um orçamento exato.';
-        document.getElementById('transf-cta').href = 'https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msg);
+        document.getElementById('transf-cta').href = 'https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(montarMsgWA(null));
     }
   });
 })();
