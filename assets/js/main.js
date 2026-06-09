@@ -158,6 +158,8 @@ async function carregarCTB() {
 
             const nome     = document.getElementById('contato-nome')?.value.trim()     || '';
             const telefone = document.getElementById('contato-telefone')?.value.trim() || '';
+            const placa    = document.getElementById('contato-placa')?.value.trim().toUpperCase() || '';
+            const renavam  = document.getElementById('contato-renavam')?.value.trim() || '';
             const servico  = document.getElementById('contato-servico')?.value          || '';
             const mensagem = document.getElementById('contato-mensagem')?.value.trim() || '';
 
@@ -168,6 +170,11 @@ async function carregarCTB() {
                 multas:         'Regularização de Multas',
                 'segunda-via':  'Segunda Via de Documentos',
                 inventario:     'Inventário de Veículo',
+                'cnh-renovacao': 'Renovação de CNH',
+                'cnh-primeira':  'Primeira Habilitação',
+                'cnh-adicao':    'Adição de Categoria',
+                'cnh-recurso':   'Recurso de Suspensão/Cassação',
+                'cnh-segunda-via': 'Segunda Via de CNH',
                 outro:          'Outro assunto',
             };
 
@@ -176,17 +183,41 @@ async function carregarCTB() {
             const linhas = [
                 `Olá! Vim pelo site e gostaria de um atendimento.`,
                 ``,
+                `*Serviço:* ${servicoTexto}`,
+                placa ? `*Placa:* ${placa}` : '',
+                renavam ? `*RENAVAM:* ${renavam}` : '',
                 `*Nome:* ${nome || 'Não informado'}`,
                 `*Telefone:* ${telefone || 'Não informado'}`,
-                `*Serviço:* ${servicoTexto}`,
                 mensagem ? `*Mensagem:* ${mensagem}` : '',
-            ].filter(l => l !== undefined);
+            ].filter(l => l !== undefined && l !== '');
 
             const texto = linhas.join('\n');
             const url   = `https://wa.me/5521995462016?text=${encodeURIComponent(texto)}`;
 
             window.open(url, '_blank', 'noopener');
         });
+
+        const whatsappBtn = contatoForm.querySelector('.contato-btn--whatsapp');
+        if (whatsappBtn) {
+            whatsappBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                const placaVal   = document.getElementById('contato-placa')?.value.trim().toUpperCase() || '';
+                const renavamVal = document.getElementById('contato-renavam')?.value.trim() || '';
+                const servicoVal = document.getElementById('contato-servico')?.value || '';
+                const msgVal     = document.getElementById('contato-mensagem')?.value.trim() || '';
+                const servicoTxt = servicoLabels[servicoVal] || servicoVal || '';
+
+                const parts = ['Olá, vim pelo site.'];
+                if (servicoTxt) parts.push(`Serviço: ${servicoTxt}.`);
+                if (placaVal)   parts.push(`Placa: ${placaVal}.`);
+                if (renavamVal) parts.push(`RENAVAM: ${renavamVal}.`);
+                if (msgVal)     parts.push(msgVal);
+
+                const textoWA = parts.join(' ');
+                const urlWA   = `https://wa.me/5521995462016?text=${encodeURIComponent(textoWA)}`;
+                window.open(urlWA, '_blank', 'noopener');
+            });
+        }
     }
 
     document.addEventListener('DOMContentLoaded', function () {

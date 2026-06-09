@@ -2251,6 +2251,24 @@
                                     </div>
                                 </div>
 
+                                <div class="contato-form-grid">
+                                    <div class="contato-campo">
+                                        <label for="contato-placa" class="contato-label">Placa do veículo</label>
+                                        <input type="text" id="contato-placa" name="placa" class="contato-input"
+                                            placeholder="Ex: ABC-1234 ou ABC1D23" maxlength="8" autocomplete="off" />
+                                    </div>
+
+                                    <div class="contato-campo">
+                                        <label for="contato-renavam" class="contato-label">RENAVAM</label>
+                                        <input type="text" id="contato-renavam" name="renavam" class="contato-input"
+                                            placeholder="9 ou 11 dígitos (está no CRV)" maxlength="11" inputmode="numeric" autocomplete="off" />
+                                    </div>
+                                </div>
+
+                                <p class="contato-hint" style="margin-top:-8px;margin-bottom:16px">
+                                    Informar placa e RENAVAM agiliza sua análise — você encontra no documento do veículo (CRV/CRLV).
+                                </p>
+
                                 <div class="contato-campo">
                                     <label for="contato-servico" class="contato-label">Serviço</label>
                                     <select id="contato-servico" name="servico" class="contato-input contato-select"
@@ -2262,6 +2280,11 @@
                                         <option value="multas">Regularização de Multas</option>
                                         <option value="segunda-via">Segunda Via de Documentos</option>
                                         <option value="inventario">Inventário de Veículo</option>
+                                        <option value="cnh-renovacao">Renovação de CNH</option>
+                                        <option value="cnh-primeira">Primeira Habilitação</option>
+                                        <option value="cnh-adicao">Adição de Categoria</option>
+                                        <option value="cnh-recurso">Recurso de Suspensão/Cassação</option>
+                                        <option value="cnh-segunda-via">Segunda Via de CNH</option>
                                         <option value="outro">Outro assunto</option>
                                     </select>
                                 </div>
