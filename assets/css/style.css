@@ -3218,6 +3218,129 @@ h2.section-title em {
 }
 
 /* =============================================
+   SEÇÃO TABELA DE SERVIÇOS / HONORÁRIOS
+============================================== */
+.honorarios-section {
+    background-color: var(--bg-base);
+    padding-block: var(--espaco-16);
+    border-top: 1px solid var(--cor-borda);
+}
+
+.honorarios-header {
+    text-align: center;
+    margin-bottom: var(--espaco-10);
+}
+
+.honorarios-sub {
+    font-family: var(--fonte-corpo);
+    font-size: var(--texto-base);
+    color: var(--cor-texto-suave);
+    margin-top: var(--espaco-4);
+    max-width: 520px;
+    margin-inline: auto;
+}
+
+.honorarios-tabela-wrap {
+    max-width: 900px;
+    margin-inline: auto;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.honorarios-tabela {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--fonte-corpo);
+    font-size: var(--texto-sm);
+}
+
+.honorarios-tabela thead th {
+    text-align: left;
+    padding: 14px 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--cor-destaque);
+    background: #111827;
+    border-bottom: 2px solid var(--cor-destaque);
+}
+
+.honorarios-tabela tbody td {
+    padding: 16px 20px;
+    color: var(--cor-texto-suave);
+    border-bottom: 1px solid var(--cor-borda);
+    vertical-align: top;
+}
+
+.honorarios-tabela tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.honorarios-tabela tbody tr:hover td {
+    background: rgba(245, 166, 35, 0.04);
+}
+
+.honorarios-tabela tbody td:first-child {
+    color: var(--cor-texto);
+    font-weight: 600;
+}
+
+.honorarios-tabela tbody td:nth-child(2) {
+    color: var(--cor-destaque);
+    font-weight: 600;
+}
+
+.honorarios-nota {
+    max-width: 700px;
+    margin: var(--espaco-8) auto 0;
+    text-align: center;
+    font-family: var(--fonte-corpo);
+    font-size: var(--texto-xs);
+    color: var(--cor-texto-muted);
+    line-height: 1.6;
+}
+
+.honorarios-cta {
+    margin-top: var(--espaco-8);
+}
+
+@media (max-width: 600px) {
+    .honorarios-tabela thead {
+        display: none;
+    }
+
+    .honorarios-tabela tbody tr {
+        display: block;
+        padding: 16px 0;
+        border-bottom: 1px solid var(--cor-borda);
+    }
+
+    .honorarios-tabela tbody td {
+        display: block;
+        padding: 4px 0;
+        border-bottom: none;
+    }
+
+    .honorarios-tabela tbody td:first-child {
+        font-size: var(--texto-base);
+        margin-bottom: 6px;
+    }
+
+    .honorarios-tabela tbody td:nth-child(2)::before {
+        content: 'Honorários: ';
+        color: var(--cor-texto-muted);
+        font-weight: 400;
+    }
+
+    .honorarios-tabela tbody td:nth-child(3)::before {
+        content: 'Taxas DETRAN: ';
+        color: var(--cor-texto-muted);
+        font-weight: 400;
+    }
+}
+
+/* =============================================
    CARDS DE MULTA (CNH)
 ============================================== */
 .sim-multas-grid {
