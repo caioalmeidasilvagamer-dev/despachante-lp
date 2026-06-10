@@ -5,7 +5,7 @@ de design na landing page. Antes de mudar CSS, leia (e atualize) este arquivo.
 
 **Stack visual:** vanilla HTML + CSS + JS, sem frameworks, sem libs de UI.
 **Tokens:** todos definidos em `:root` em `assets/css/style.css` (64 tokens).
-**Público:** proprietários de veículos em Volta Redonda e região (Brasil, 30-65 anos).
+**Público:** proprietários de veículos em todo o Brasil (30-65 anos).
 
 ---
 
@@ -302,7 +302,7 @@ de design na landing page. Antes de mudar CSS, leia (e atualize) este arquivo.
 - Background: `--cor-primaria` sólido (considerar gradiente radial sutil de `--cor-primaria` para tom mais escuro no canto)
 - Padding top: 96px (compensa header fixo) + 64px
 - Padding bottom: 96px
-- Conteúdo: badge "Volta Redonda, RJ" + h1 (max 60 chars) + subtítulo (max 200 chars) + separador âmbar + 2 CTAs (primário WhatsApp + secundário "Ver serviços") + linha de métricas (3 itens, separador `·`)
+- Conteúdo: badge "Despachante de Trânsito · Todo o Brasil" + h1 (max 60 chars) + subtítulo (max 200 chars) + separador âmbar + 2 CTAs (primário WhatsApp + secundário "Ver serviços") + linha de métricas (3 itens, separador `·`)
 - **Sem imagem decorativa grande** (assets/img está vazio); tipografia + métrica fazem o trabalho
 - Hierarquia: h1 em `--peso-extrabold`, "resolvida" em itálico âmbar
 - Mobile: tudo 1 coluna, h1 não passa de `--texto-4xl`
