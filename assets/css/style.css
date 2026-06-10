@@ -9,121 +9,112 @@
     /* =============================================
        PALETA EDITORIAL
      ============================================== */
-    --bg-base: #0d1829;
-    /* navy escuro — match com shader */
-    --shader-bg-base: #0d1829;
-    /* cor de fundo do BlueprintShader */
-    --bg-footer: #111111;
-    /* footer, mais neutro */
-    --bg-surface-1: #111111;
-    /* camada 1 */
-    --bg-surface-2: #141414;
-    /* cards */
-    --bg-surface-3: #1a1a1a;
-    /* hover, badge */
-    --bg-surface-4: #1f1f1f;
-    /* input, hover alto */
+    --bg-base: #0B1C3A;
+    --shader-bg-base: #0B1C3A;
+    --bg-footer: #070F1F;
+    --bg-surface-1: #0E2040;
+    --bg-surface-2: #1f1e1e;
+    --bg-surface-3: #1A3A6B;
+    --bg-surface-4: #1F4275;
 
-    --cor-destaque: #F5A623;
-    /* âmbar autoridade */
-    --cor-destaque-hover: #e09415;
-    --cor-destaque-soft: #92400e;
-    --cor-destaque-10: #92400e;
-    --cor-destaque-15: #92400e;
-    --cor-destaque-20: #b45309;
-    --cor-destaque-30: #b45309;
-    --cor-destaque-50: #F5A623;
+    --cor-destaque: #D9A020;
+    --cor-destaque-hover: #C08A18;
+    --cor-destaque-soft: #3D2A06;
+    --cor-destaque-10: #231806;
+    --cor-destaque-15: #2B1F07;
+    --cor-destaque-20: #3D2A06;
+    --cor-destaque-30: #5C4010;
+    --cor-destaque-50: #D9A020;
 
-    --cor-texto: #ffffff;
-    --cor-texto-suave: #a3a3a3;
-    --cor-texto-muted: #6b6b6b;
-    --cor-borda: #262626;
-    --cor-borda-hover: #3a3a3a;
+    --cor-texto: #F0F4FF;
+    --cor-texto-suave: #b0c6da;
+    --cor-texto-muted: #3D6090;
+    --cor-borda: #1E3D6B;
+    --cor-borda-hover: #2A5080;
 
-    /* WhatsApp */
     --cor-sucesso: #25D366;
     --cor-sucesso-hover: #1fb855;
 
-    /* Legacy compat — mapeados para nova paleta */
-    --cor-primaria: #0a0a0a;
-    --cor-secundaria: #F5A623;
-    --cor-fundo: #0a0a0a;
-    --cor-fundo-alt: #111111;
-    --cor-superficie: #141414;
-    --cor-texto-meta: #6b6b6b;
-    --texto-em-dark: #ffffff;
-    --texto-em-dark-suave: #a3a3a3;
-    --texto-em-dark-meta: #6b6b6b;
-    --borda-em-dark: #262626;
-    --bg-dark-primary: #0a0a0a;
-    --bg-dark-secondary: #111111;
-    --bg-dark-section: #0a0a0a;
-    --bg-dark-deep: #000000;
-    --bg-dark-card: #141414;
-    --bg-footer: #000000;
-    --border-dark-subtle: #262626;
-    --border-dark-medium: #2e2e2e;
-    --border-dark-strong: #3a3a3a;
-    --border-dark-row: #1e1e1e;
-    --border-dark-header: #262626;
-    --border-dark-track: #262626;
-    --borda-claro-em-dark: #262626;
-    --borda-claro-em-dark-forte: #3a3a3a;
-    --borda-card-em-dark: #262626;
+    /* Legacy compat */
+    --cor-primaria: #0B1C3A;
+    --cor-secundaria: #D9A020;
+    --cor-fundo: #0B1C3A;
+    --cor-fundo-alt: #0E2040;
+    --cor-superficie: #112952;
+    --cor-texto-meta: #3D6090;
+    --texto-em-dark: #F0F4FF;
+    --texto-em-dark-suave: #7BAAD4;
+    --texto-em-dark-meta: #3D6090;
+    --borda-em-dark: #1E3D6B;
+    --bg-dark-primary: #0B1C3A;
+    --bg-dark-secondary: #0E2040;
+    --bg-dark-section: #0B1C3A;
+    --bg-dark-deep: #070F1F;
+    --bg-dark-card: #112952;
+    --bg-footer: #070F1F;
+    --border-dark-subtle: #1E3D6B;
+    --border-dark-medium: #254D7A;
+    --border-dark-strong: #2A5080;
+    --border-dark-row: #162D4A;
+    --border-dark-header: #1E3D6B;
+    --border-dark-track: #1E3D6B;
+    --borda-claro-em-dark: #1E3D6B;
+    --borda-claro-em-dark-forte: #2A5080;
+    --borda-card-em-dark: #1E3D6B;
     --borda-card-em-dark-hover: var(--cor-destaque);
-    --card-tint-em-dark: #141414;
-    --card-tint-em-dark-hover: #1a1a1a;
-    --text-dark-strong: #ffffff;
-    --text-dark-medium: #a3a3a3;
-    --text-dark-soft: #a3a3a3;
-    --text-dark-muted: #6b6b6b;
-    --text-dark-half: #a3a3a3;
-    --text-dark-faint: #111827;
-    --text-dark-dot: #3a3a3a;
-    --destaque-tint: #92400e;
-    --destaque-04: #92400e;
-    --destaque-10: #92400e;
-    --destaque-15: #92400e;
-    --destaque-20: #b45309;
-    --destaque-35: #b45309;
-    --destaque-50: #F5A623;
-    --destaque-70: #F5A623;
-    --destaque-hover: #e09415;
-    --destaque-soft: #92400e;
-    --destaque-fade: #b45309;
-    --glass-bg: #141414;
-    --glass-bg-hover: #1a1a1a;
-    --glass-border: #262626;
+    --card-tint-em-dark: #112952;
+    --card-tint-em-dark-hover: #1A3A6B;
+    --text-dark-strong: #F0F4FF;
+    --text-dark-medium: #7BAAD4;
+    --text-dark-soft: #7BAAD4;
+    --text-dark-muted: #3D6090;
+    --text-dark-half: #7BAAD4;
+    --text-dark-faint: #0E2040;
+    --text-dark-dot: #2A5080;
+    --destaque-tint: #3D2A06;
+    --destaque-04: #231806;
+    --destaque-10: #231806;
+    --destaque-15: #2B1F07;
+    --destaque-20: #3D2A06;
+    --destaque-35: #5C4010;
+    --destaque-50: #D9A020;
+    --destaque-70: #D9A020;
+    --destaque-hover: #C08A18;
+    --destaque-soft: #3D2A06;
+    --destaque-fade: #5C4010;
+    --glass-bg: #112952;
+    --glass-bg-hover: #1A3A6B;
+    --glass-border: #1E3D6B;
     --glass-border-hover: var(--cor-destaque);
-    --overlay-dark: #000000;
-    --overlay-shader: #000000;
-    --shadow-dark-heavy: #000000;
-    --shadow-dark-drop: #000000;
-    --shadow-dark-glow: #000000;
-    --shadow-dark-scroll: #000000;
-    --shadow-depoimento: 0 2px 12px #000000;
+    --overlay-dark: #070F1F;
+    --overlay-shader: #070F1F;
+    --shadow-dark-heavy: #070F1F;
+    --shadow-dark-drop: #070F1F;
+    --shadow-dark-glow: #070F1F;
+    --shadow-dark-scroll: #070F1F;
+    --shadow-depoimento: 0 2px 12px #070F1F;
     --sombra-sucesso: 0 4px 16px #15803d;
     --sombra-sucesso-hover: 0 6px 20px #15803d;
     --sucesso-hover: #1fb855;
-    --border-dark-pulse-glow: #94a3b8;
-    --hero-card-bg: #141414;
-    --hero-card-borda: #262626;
-    --hero-linha-stroke: #b45309;
-    --hero-linha-stroke-pulse: #b45309;
-    --hero-linha-ponto: #F5A623;
-    --hero-blueprint-circulo: #111827;
-    --hero-card-surface: #141414;
-    --hero-card-border-blue: #262626;
-    --hero-card-shadow-blue: #000000;
-    --hero-card-divider: #262626;
-    --titulo-claro: #ffffff;
-    --texto-card-cinza: #a3a3a3;
-    --decorativo-claro: #111827;
+    --border-dark-pulse-glow: #7BAAD4;
+    --hero-card-bg: #112952;
+    --hero-card-borda: #1E3D6B;
+    --hero-linha-stroke: #5C4010;
+    --hero-linha-stroke-pulse: #5C4010;
+    --hero-linha-ponto: #D9A020;
+    --hero-blueprint-circulo: #0E2040;
+    --hero-card-surface: #112952;
+    --hero-card-border-blue: #1E3D6B;
+    --hero-card-shadow-blue: #070F1F;
+    --hero-card-divider: #1E3D6B;
+    --titulo-claro: #F0F4FF;
+    --texto-card-cinza: #7BAAD4;
+    --decorativo-claro: #0E2040;
     --decorativo-claro-hover: var(--cor-destaque);
-    --superficie-claro-em-dark: #111827;
-    --superficie-claro-em-dark-hover: #111827;
-    --step-glow: 0 0 20px #92400e;
-    --step-glow-hover: 0 0 28px #b45309;
+    --superficie-claro-em-dark: #0E2040;
+    --superficie-claro-em-dark-hover: #0E2040;
+    --step-glow: 0 0 20px #3D2A06;
+    --step-glow-hover: 0 0 28px #5C4010;
 
     /* =============================================
        TIPOGRAFIA
