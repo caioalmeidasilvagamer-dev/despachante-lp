@@ -28,7 +28,7 @@
 
     --cor-texto: #F0F4FF;
     --cor-texto-suave: #b0c6da;
-    --cor-texto-muted: #3D6090;
+    --cor-texto-muted: #bbd5ef;
     --cor-borda: #1E3D6B;
     --cor-borda-hover: #2A5080;
 
@@ -652,11 +652,11 @@ a {
     align-items: center;
     justify-content: center;
     gap: 24px;
-    padding-bottom: 8px;
+    padding-bottom: 80px;
     width: 100%;
     max-width: 100%;
     min-height: clamp(240px, 50vw, 420px);
-    overflow: hidden;
+    overflow: visible;
     overflow-x: clip;
     min-width: 0;
 }
@@ -666,7 +666,7 @@ a {
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse 55% 70% at center, #0a0a0a 0%, transparent 100%);
+    background: radial-gradient(ellipse 55% 70% at center, var(--bg-base) 0%, transparent 100%);
     pointer-events: none;
     z-index: 1;
 }
